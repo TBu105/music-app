@@ -1,0 +1,3 @@
+set up dự án
+    + node js
+    + kết nối với github
