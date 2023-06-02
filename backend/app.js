@@ -13,6 +13,7 @@ require("dotenv").config();
 const port = 3000 || process.env.PORT;
 
 const startApp = async () => {
+  //TODO: Viết console log kết nối DB thành công cho mongoose
   try {
     await connectDB();
     app.listen(port, () => {
