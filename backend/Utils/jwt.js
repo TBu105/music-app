@@ -1,9 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const isTokenValid = async ({ token }) => {
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-};
+const isTokenValid = ({ token }) => jwt.verify(token, process.env.JWT_SECRET);
 
 const attachTokenToCookies = async ({ res, payload }) => {
   //create token

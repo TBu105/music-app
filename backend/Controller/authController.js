@@ -3,7 +3,7 @@ const User = require("../Model/User");
 const { attachTokenToCookies } = require("../Utils/jwt");
 
 const register = async (req, res) => {
-  const { email, username, birthday, password, gender } = req.body;
+  const { email, username, birthday, password, gender, image } = req.body;
 
   if (!email || !username || !birthday || !gender || !password) {
     throw Error("You need to field all the information");
@@ -25,6 +25,7 @@ const register = async (req, res) => {
     gender,
     password,
     role,
+    image,
   });
 
   //create payload
@@ -52,11 +53,8 @@ const login = async (req, res) => {
     throw Error("Password is invalid");
   }
 
-  const tokenUser = {
-    name: user.username,
-    userId: user._id,
-    role: user.role,
-  };
+  const tokenUser = { email: user.email, userId: user._id, role: user.role };
+
   //create jwt token and attach it to cookie
   attachTokenToCookies({ res, payload: tokenUser });
 
@@ -64,7 +62,11 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.send("logout");
+  res.cookie("token", "logout", {
+    httpOnly: true,
+    expires: new Date(Date.now() + 5000),
+  });
+  res.status(200).json({ message: "Logout success" });
 };
 
 module.exports = {

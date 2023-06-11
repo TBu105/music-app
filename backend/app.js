@@ -7,6 +7,9 @@ const app = express();
 const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 
+//install package to replace try catch
+require("express-async-errors");
+
 //database connect
 const connectDB = require("./Database/db");
 
@@ -29,7 +32,9 @@ app.use("/api/v1/auth", authRouter);
 //TODO: Ghi console log thông báo cho kết nối DB thành công
 
 const port = 3000 || process.env.PORT;
+
 const startApp = async () => {
+  //TODO: Viết console log kết nối DB thành công cho mongoose
   try {
     await connectDB(process.env.MONGO_URI);
     app.listen(port, () => {
