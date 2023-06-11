@@ -5,21 +5,26 @@ const {
   getUserById,
   getAllUsers,
   updateUserById,
-  updateUserPasswordById,
+  updateUserPassword,
   deleteUserById,
   uploadUserAvartar,
+  showCurrentUser,
 } = require("../Controller/userController");
 
-router.route("/").get(getAllUsers);
+const { authenticateUser } = require("../Middleware/authentication");
+
+router.route("/").get(authenticateUser, getAllUsers);
+
+router.route("/currentUser").get(authenticateUser, showCurrentUser);
 
 router.route("/upload").post(uploadUserAvartar);
 
+router.route("/password").patch(authenticateUser, updateUserPassword);
+
 router
   .route("/:id")
-  .get(getUserById)
-  .patch(updateUserById)
-  .delete(deleteUserById);
-
-router.route("/password/:id").patch(updateUserPasswordById);
+  .get(authenticateUser, getUserById)
+  .patch(authenticateUser, updateUserById)
+  .delete(authenticateUser, deleteUserById);
 
 module.exports = router;
