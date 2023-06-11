@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 //import validator package to validate the email
 const validatorPackage = require("validator");
+const bcrypt = require("bcrypt");
 
 //Create a schema using mongoose
 const UserSchema = new mongoose.Schema({
@@ -27,15 +28,45 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["admin", "user", "premium", "artist"],
+    enum: {
+      values: ["admin", "user", "premium", "artist"],
+      message: "{VALUE} is not supported",
+    },
     default: "user",
   },
   gender: {
     type: String,
-    enum: ["male", "female", "others"],
+    enum: {
+      values: ["male", "female", "others"],
+      message: "{VALUE} is not supported",
+    },
+    require: [true, "You need to choose gender"],
+  },
+  password: {
+    type: String,
+    require: [true, "Please provide your password"],
+    minlength: [3, "Your username must longer than 3 characters"],
+    maxlength: [25, "Your is too long, it must under 25 characters"],
+    trim: true,
   },
   follower: {
     type: Number,
     default: 0,
   },
+  image: {
+    type: String,
+  },
 });
+
+UserSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+UserSchema.methods.comparePassword = async function (clientPass) {
+  const isMatch = await bcrypt.compare(clientPass, this.password);
+  return isMatch;
+};
+
+module.exports = mongoose.model("User", UserSchema);

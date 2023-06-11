@@ -3,16 +3,12 @@ require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
 const path = require("path");
 
-console.log(cloudinary.config().cloud_name);
-console.log(path.resolve("./Bo.jpg"));
+const uploadImage = async (file) => {
+  const image = await cloudinary.uploader.upload(file, (result) => result);
 
-const imagePath = path.join("../res/image" + )
+  return image;
+};
 
-cloudinary.uploader
-  .upload(path.resolve("./image/Bo.jpg"), {
-    resource_type: "image",
-  })
-  .then((result) => console.log("success", JSON.stringify(result, null, 2)))
-  .catch((error) => {
-    console.log("error", JSON.stringify(error, null, 2));
-  });
+module.exports = {
+  uploadImage,
+};
