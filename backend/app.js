@@ -26,6 +26,8 @@ app.use(
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auth", authRouter);
 
+//TODO: Ghi console log thông báo cho kết nối DB thành công
+
 const port = 3000 || process.env.PORT;
 const startApp = async () => {
   try {
