@@ -34,6 +34,7 @@ const UserSchema = new mongoose.Schema({
     },
     default: "user",
   },
+  //làm gì còn giới tính nào khác nữa?
   gender: {
     type: String,
     enum: {
