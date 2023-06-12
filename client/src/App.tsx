@@ -1,8 +1,14 @@
 import { AudioPlayer } from "./components/Player/AudioPlayer"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import MainLayout from "./layout/MainLayout"
-import Homepage from "./pages/Homepage"
 import { BsLayoutSidebar } from "react-icons/bs"
+
+//layout imports
+import MainLayout from "./layout/MainLayout"
+import UserLayout from "./layout/UserLayout"
+
+//page imports
+import Homepage from "./pages/Homepage"
+import Login from "./pages/Login"
 
 const audio = {
   url: "https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3",
@@ -16,6 +22,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Homepage />} />
+        </Route>
+        <Route path="/login" element={<UserLayout />}>
+          <Route index element={<Login />} />
         </Route>
       </Routes>
     </Router>
