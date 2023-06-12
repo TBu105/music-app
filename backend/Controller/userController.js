@@ -3,6 +3,10 @@ const User = require("../Model/User");
 const { uploadImage } = require("./uploadFIleController");
 
 const { attachTokenToCookies } = require("../Utils/jwt");
+const {
+  checkPermissonToChangeInfo,
+  checkAdminRightPermission,
+} = require("../Utils/checkPermission");
 
 // nhung function can thiet trong user controller la gi
 const getUserById = async (req, res) => {
@@ -30,19 +34,13 @@ const updateUserById = async (req, res) => {
 
   //kiem tra xem nguoi thay doi thong tin co phai nguoi dang dang nhap, hoac
   //admin hay khong, neu khong thi khong cho doi thong tin
-  if (req.user.userId !== id) {
-    if (req.user.role !== "admin") {
-      throw Error("Do not have permisson to change the user info");
-    }
-  }
+  checkPermissonToChangeInfo(req.user, id);
 
   //kiem tra trong yeu cau thay doi co role hay khong
   //neu co thi phai kiem tra nguoi thay doi thong tin co phai admin khong
   //neu khong, thi khong duoc thay doi thong tin
   if (req.body.hasOwnProperty("role")) {
-    if (req.user.role !== "admin") {
-      throw Error("Do not have permisson to change the user role");
-    }
+    checkAdminRightPermission(req.user);
   }
 
   //tim kiem thong id user, va thay doi thong tin theo req.body
