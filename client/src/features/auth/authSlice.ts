@@ -112,8 +112,7 @@ export const {
 
 // Axios instance for API requests
 const api = axios.create({
-  baseURL: "http://localhost:3000/api/v1", // Replace with your API endpoint
-  proxy: false,
+  baseURL: "/api/v1", // Replace with your API endpoint
 })
 
 export const registerAsync =
@@ -146,7 +145,7 @@ export const loginAsync =
   (email: string, password: string): AppThunk =>
   async (dispatch) => {
     try {
-      const response = await axios.post("/api/v1/auth/login", {
+      const response = await api.post("/auth/login", {
         email,
         password,
       })

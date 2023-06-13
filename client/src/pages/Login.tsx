@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { loginAsync, loginFailure } from "../features/auth/authSlice"
+import { loginAsync } from "../features/auth/authSlice"
 import { useNavigate } from "react-router-dom"
-import { RootState } from "../app/store"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
 
 const Login = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const loginError = useSelector((state: RootState) => state.auth.error)
+  const loginError = useAppSelector((state) => state.auth.error)
 
   const userRef = useRef<HTMLInputElement>(null)
   const [user, setUser] = useState("")
@@ -38,7 +37,7 @@ const Login = () => {
   }
 
   return (
-    <div className="mx-auto w-1/3 bg-dark h-screen mt-10 rounded-xl text-linkwater pt-12">
+    <div className="mx-auto w-1/3 bg-dark h-screen mt-10 rounded-xl text-linkwater pt-12 box-border">
       <h1 className="text-center font-bold text-4xl">Login to Unicord</h1>
       <form className="mx-auto p-5 w-1/2" onSubmit={handleSubmit}>
         <label>Email or username</label>
@@ -56,7 +55,7 @@ const Login = () => {
           value={password}
           onChange={handleChangePassword}
         />
-        {errMessage && <div className="text-red-500 mb-5">{errMessage}</div>}
+        {errMessage && <div className="text-red mb-5">{errMessage}</div>}
         <input
           type="submit"
           value="Log In"
