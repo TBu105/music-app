@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from "react"
-import { loginAsync } from "../features/auth/authSlice"
+import { loginAsync, selectAuth } from "../features/auth/authSlice"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { redirectIfUser } from "../utils/redirect"
 
 const Login = () => {
+  redirectIfUser()
+
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const loginError = useAppSelector((state) => state.auth.error)

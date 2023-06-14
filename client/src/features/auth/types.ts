@@ -6,6 +6,7 @@ export interface User {
   password: string
   gender: string
   role: string
+  follower: number
   image: string
 }
 export interface CurrentUser {

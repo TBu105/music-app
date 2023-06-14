@@ -107,21 +107,38 @@ const api = axios.create({
 
 export const selectAuth = (state: RootState) => state.auth
 
-export const fetchCurrentUserAsync = (): AppThunk => async (dispatch) => {
-  try {
-    const response = await api.get("/user/currentUser")
+export const getCurrentUserAsync = (): AppThunk => async (dispatch) => {
+  const response = await api.get("/user/currentUser")
+  const { user } = response.data
+  dispatch(
+    setCurrentUserSuccess({
+      email: user.email,
+      id: user.userId,
+      role: user.role,
+    }),
+  )
+  dispatch(getProfile(user.userId))
+}
+
+export const getProfile =
+  (userId: string): AppThunk =>
+  async (dispatch) => {
+    const response = await api.get(`/user/${userId}`)
     const { user } = response.data
     dispatch(
-      setCurrentUserSuccess({
-        email: user.email,
+      setUserInfoSuccess({
         id: user.userId,
+        email: user.email,
+        username: user.username,
+        birthday: user.birthday,
+        password: "",
+        gender: user.gender,
         role: user.role,
+        follower: user.follower,
+        image: user.image,
       }),
     )
-  } catch (error: any) {
-    dispatch(setCurrentUserFailure(error))
   }
-}
 
 export const registerAsync =
   (

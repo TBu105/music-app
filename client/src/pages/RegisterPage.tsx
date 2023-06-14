@@ -3,8 +3,11 @@ import { useAppDispatch, useAppSelector } from "../app/hooks"
 import BrandLogo from "../assets/brand-light.svg"
 import Primary from "../components/Buttons/Primary"
 import { registerAsync } from "../features/auth/authSlice"
+import { redirectIfUser } from "../utils/redirect"
 
 const RegisterPage = () => {
+  redirectIfUser()
+
   const dispatch = useAppDispatch()
   const errMessage = useAppSelector((state) => state.auth.error)
 

@@ -5,7 +5,7 @@ export default {
     extend: {
       colors: {
         dark: {
-          DEFAULT: "#06050A",
+          DEFAULT: "#050410",
           500: "#141414",
         },
         martinique: {
