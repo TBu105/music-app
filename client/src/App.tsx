@@ -1,3 +1,6 @@
+import { useEffect } from "react"
+import { useAppDispatch } from "./app/hooks"
+import { fetchCurrentUserAsync } from "./features/auth/authSlice"
 import { AudioPlayer } from "./components/Player/AudioPlayer"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { BsLayoutSidebar } from "react-icons/bs"
@@ -18,6 +21,12 @@ const audio = {
   thumbnail: "https://images.unsplash.com/photo-1511379938547-c1f69419868d",
 }
 const App = () => {
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(fetchCurrentUserAsync())
+  })
+
   return (
     <Router>
       <Routes>

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { LegacyRef, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import BrandLogo from "../assets/brand-light.svg"
 import Primary from "../components/Buttons/Primary"
@@ -49,7 +49,6 @@ const RegisterPage = () => {
           `${year}-${month}-${date}`,
           password,
           gender,
-          "",
         ),
       )
     } catch (error) {}

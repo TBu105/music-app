@@ -34,6 +34,7 @@ const Login = () => {
     dispatch(loginAsync(user, password))
     setUser("")
     setPassword("")
+    navigate("/")
   }
 
   return (

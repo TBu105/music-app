@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     open: true,
     proxy: {
-      "/api/v1/auth": "http://localhost:3000",
+      "/api/v1": "http://localhost:3000",
     },
   },
   build: {

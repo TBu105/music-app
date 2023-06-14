@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AppThunk } from "../../app/store"
-import { User } from "./types"
+import { AppThunk, RootState } from "../../app/store"
+import { CurrentUser, User } from "./types"
 import axios from "axios"
 
 interface UserState {
   user: User | null
   error: string | null
-  currentUser: User | null
+  currentUser: CurrentUser | null
   allUsers: User[]
 }
 
@@ -21,33 +21,25 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    registerSuccess: (state, action: PayloadAction<User>) => {
-      state.user = action.payload
+    setCurrentUserSuccess: (state, action: PayloadAction<CurrentUser>) => {
+      state.currentUser = action.payload
       state.error = null
     },
-    registerFailure: (state, action: PayloadAction<string>) => {
-      state.user = null
+    setCurrentUserFailure: (state, action: PayloadAction<string>) => {
+      state.currentUser = null
       state.error = action.payload
     },
-    loginSuccess: (state, action: PayloadAction<User>) => {
+    setUserInfoSuccess: (state, action: PayloadAction<User>) => {
       state.user = action.payload
       state.error = null
     },
-    loginFailure: (state, action: PayloadAction<string>) => {
+    setUserInfoFailure: (state, action: PayloadAction<string>) => {
       state.user = null
       state.error = action.payload
     },
     logoutSuccess: (state) => {
       state.user = null
       state.error = null
-    },
-    getUserSuccess: (state, action: PayloadAction<User>) => {
-      state.currentUser = action.payload
-      state.error = null
-    },
-    getUserFailure: (state, action: PayloadAction<string>) => {
-      state.currentUser = null
-      state.error = action.payload
     },
     getAllUsersSuccess: (state, action: PayloadAction<User[]>) => {
       state.allUsers = action.payload
@@ -91,13 +83,11 @@ const authSlice = createSlice({
 })
 
 export const {
-  registerSuccess,
-  registerFailure,
-  loginSuccess,
-  loginFailure,
+  setCurrentUserSuccess,
+  setCurrentUserFailure,
+  setUserInfoSuccess,
+  setUserInfoFailure,
   logoutSuccess,
-  getUserSuccess,
-  getUserFailure,
   getAllUsersSuccess,
   getAllUsersFailure,
   updateUserSuccess,
@@ -115,6 +105,24 @@ const api = axios.create({
   baseURL: "/api/v1", // Replace with your API endpoint
 })
 
+export const selectAuth = (state: RootState) => state.auth
+
+export const fetchCurrentUserAsync = (): AppThunk => async (dispatch) => {
+  try {
+    const response = await api.get("/user/currentUser")
+    const { user } = response.data
+    dispatch(
+      setCurrentUserSuccess({
+        email: user.email,
+        id: user.userId,
+        role: user.role,
+      }),
+    )
+  } catch (error: any) {
+    dispatch(setCurrentUserFailure(error))
+  }
+}
+
 export const registerAsync =
   (
     email: string,
@@ -122,7 +130,6 @@ export const registerAsync =
     birthday: string,
     password: string,
     gender: string,
-    image: string,
   ): AppThunk =>
   async (dispatch) => {
     try {
@@ -132,12 +139,17 @@ export const registerAsync =
         birthday,
         password,
         gender,
-        image,
       })
-      const user = response.data
-      dispatch(registerSuccess(user))
+      const { user } = response.data
+      dispatch(
+        setCurrentUserSuccess({
+          email: user.email,
+          id: user.userId,
+          role: user.role,
+        }),
+      )
     } catch (error: any) {
-      dispatch(registerFailure(error.message))
+      dispatch(setCurrentUserFailure(error))
     }
   }
 
@@ -149,10 +161,16 @@ export const loginAsync =
         email,
         password,
       })
-      const user = response.data
-      dispatch(loginSuccess(user))
+      const { user } = response.data
+      dispatch(
+        setCurrentUserSuccess({
+          email: user.email,
+          id: user.userId,
+          role: user.role,
+        }),
+      )
     } catch (error: any) {
-      dispatch(loginFailure(error.message))
+      dispatch(setCurrentUserFailure(error.message))
     }
   }
 
@@ -170,10 +188,10 @@ export const getUserByIdAsync =
   async (dispatch) => {
     try {
       const response = await api.get(`/user/${id}`)
-      const user = response.data
-      dispatch(getUserSuccess(user))
+      const { user } = response.data
+      dispatch(setUserInfoSuccess(user))
     } catch (error: any) {
-      dispatch(getUserFailure(error.message))
+      dispatch(setUserInfoFailure(error.message))
     }
   }
 

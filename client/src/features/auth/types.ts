@@ -8,3 +8,8 @@ export interface User {
   role: string
   image: string
 }
+export interface CurrentUser {
+  email: string
+  id: string
+  role: string
+}
