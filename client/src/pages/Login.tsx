@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"
-import { loginAsync, selectAuth } from "../features/auth/authSlice"
+import { loginAsync } from "../features/auth/authSlice"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { redirectIfUser } from "../utils/redirect"

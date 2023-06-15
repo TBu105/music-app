@@ -9,7 +9,7 @@ const Primary = ({ children, onClick }: Props) => {
   return (
     <button
       onClick={onClick}
-      className="py-1.5 px-4 bg-jarcata rounded-full text-[12px] font-bold text-linkwater"
+      className="bg-jarcata rounded-full text-xs font-bold text-linkwater"
     >
       {children}
     </button>

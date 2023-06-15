@@ -1,9 +1,8 @@
 import { useEffect } from "react"
-import { useAppDispatch, useAppSelector } from "./app/hooks"
-import { getCurrentUserAsync, getProfile } from "./features/auth/authSlice"
+import { useAppDispatch } from "./app/hooks"
+import { getCurrentUserAsync } from "./features/auth/authSlice"
 import { AudioPlayer } from "./components/Player/AudioPlayer"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { BsLayoutSidebar } from "react-icons/bs"
 
 //layout imports
 import MainLayout from "./layout/MainLayout"
@@ -22,7 +21,6 @@ const audio = {
 }
 const App = () => {
   const dispatch = useAppDispatch()
-  const user = useAppSelector((state) => state.auth.currentUser)
 
   useEffect(() => {
     dispatch(getCurrentUserAsync())
