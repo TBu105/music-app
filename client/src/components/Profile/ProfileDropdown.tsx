@@ -2,12 +2,14 @@ import React, { RefObject, useEffect, useRef, useState } from "react"
 import { BsBoxArrowUpRight, BsChevronDown, BsPerson } from "react-icons/bs"
 import { Link } from "react-router-dom"
 import Primary from "../Buttons/Primary"
+import { User } from "../../features/auth/types"
+
 type Props = {
-  avatar?: string
+  user: User | null
   logOut: () => void
 }
 
-const ProfileDropdown = ({ avatar, logOut }: Props) => {
+const ProfileDropdown = ({ user, logOut }: Props) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const profileRef: RefObject<HTMLDivElement> = useRef(null)
 
@@ -31,12 +33,16 @@ const ProfileDropdown = ({ avatar, logOut }: Props) => {
     <div ref={profileRef} className="h-8">
       <Primary onClick={() => setShowProfileMenu(!showProfileMenu)}>
         <div className="flex items-center p-1 gap-1 h-full">
-          {avatar === "" ? (
-            <div className="bg-gray-500 rounded-full p-1">
+          {user?.image === "" ? (
+            <div className="bg-neutral-700 rounded-full p-1">
               <BsPerson size={16} />
             </div>
           ) : (
-            <img src={avatar} alt="avatar" className="w-6 h-6 rounded-full" />
+            <img
+              src={user?.image}
+              alt="avatar"
+              className="w-6 h-6 rounded-full object-cover"
+            />
           )}
           <BsChevronDown />
         </div>
@@ -51,7 +57,10 @@ const ProfileDropdown = ({ avatar, logOut }: Props) => {
             <span>Account</span>
             <BsBoxArrowUpRight />
           </Link>
-          <Link to={"/"} className="hover:bg-neutral-600 p-2.5 rounded-sm">
+          <Link
+            to={`/user/${user?.id}`}
+            className="hover:bg-neutral-600 p-2.5 rounded-sm"
+          >
             <span>Profile</span>
           </Link>
           <Link

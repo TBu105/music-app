@@ -12,6 +12,7 @@ import UserLayout from "./layout/UserLayout"
 import Homepage from "./pages/Homepage"
 import Login from "./pages/Login"
 import RegisterPage from "./pages/RegisterPage"
+import ProfilePage from "./pages/ProfilePage"
 
 const audio = {
   url: "https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3",
@@ -31,6 +32,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Homepage />} />
+          <Route path="/user/:id" element={<ProfilePage />} />
         </Route>
         <Route path="/account" element={<UserLayout />}>
           <Route path="login" element={<Login />} />

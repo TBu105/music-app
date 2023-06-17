@@ -25,6 +25,9 @@ export default {
       fontFamily: {
         exo: ["'Exo 2'", "Lato", "sans-serif"],
       },
+      spacing: {
+        88: "22rem",
+      },
     },
   },
   plugins: [],

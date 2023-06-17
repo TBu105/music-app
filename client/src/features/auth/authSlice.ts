@@ -127,7 +127,7 @@ export const getProfile =
     const { user } = response.data
     dispatch(
       setUserInfoSuccess({
-        id: user.userId,
+        id: userId,
         email: user.email,
         username: user.username,
         birthday: user.birthday,
