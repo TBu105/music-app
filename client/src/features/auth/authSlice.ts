@@ -6,8 +6,9 @@ import axios from "axios"
 interface UserState {
   user: User | null
   error: string | null
-  currentUser: CurrentUser | null
+  currentUser: User | null
   allUsers: User[]
+  isLoggedIn: boolean
 }
 
 const initialState: UserState = {
@@ -15,14 +16,16 @@ const initialState: UserState = {
   error: null,
   currentUser: null,
   allUsers: [],
+  isLoggedIn: false,
 }
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setCurrentUserSuccess: (state, action: PayloadAction<CurrentUser>) => {
+    setCurrentUserSuccess: (state, action: PayloadAction<User>) => {
       state.currentUser = action.payload
+      state.isLoggedIn = true
       state.error = null
     },
     setCurrentUserFailure: (state, action: PayloadAction<string>) => {
@@ -37,11 +40,10 @@ const authSlice = createSlice({
       state.user = null
       state.error = action.payload
     },
-    logoutSuccess: (state, action: PayloadAction<string>) => {
+    logoutSuccess: (state) => {
       state.user = null
       state.currentUser = null
       state.error = null
-      console.log(action.payload)
     },
     getAllUsersSuccess: (state, action: PayloadAction<User[]>) => {
       state.allUsers = action.payload
@@ -110,17 +112,30 @@ const api = axios.create({
 export const selectAuth = (state: RootState) => state.auth
 
 export const getCurrentUserAsync = (): AppThunk => async (dispatch) => {
-  const response = await api.get("/user/currentUser")
-  const { user } = response.data
-  dispatch(
-    setCurrentUserSuccess({
-      email: user.email,
-      id: user.userId,
-      role: user.role,
-    }),
-  )
-  dispatch(getProfile(user.userId))
+  try {
+    const response = await api.get("/user/currentUser")
+    const { user } = response.data
+    const getCurrentUserInfo = await api.get(`/user/${user.userId}`)
+    const userData = getCurrentUserInfo.data.user
+    dispatch(
+      setCurrentUserSuccess({
+        id: user.userId,
+        email: userData.email,
+        username: userData.username,
+        birthday: userData.birthday,
+        password: "",
+        gender: userData.gender,
+        role: userData.role,
+        follower: userData.follower,
+        image: userData.image,
+      }),
+    )
+  } catch (error: any) {
+    dispatch(setCurrentUserFailure(error.message))
+  }
 }
+
+export const selectCurrentUser = (state: RootState) => state.auth.currentUser
 
 export const getProfile =
   (userId: string): AppThunk =>
@@ -164,14 +179,21 @@ export const registerAsync =
         gender,
       })
       const { user } = response.data
+      const getCurrentUserInfo = await api.get(`/user/${user.userId}`)
+      const userData = getCurrentUserInfo.data.user
       dispatch(
         setCurrentUserSuccess({
-          email: user.email,
           id: user.userId,
-          role: user.role,
+          email: userData.email,
+          username: userData.username,
+          birthday: userData.birthday,
+          password: "",
+          gender: userData.gender,
+          role: userData.role,
+          follower: userData.follower,
+          image: userData.image,
         }),
       )
-      dispatch(getProfile(user.userId))
     } catch (error: any) {
       dispatch(setCurrentUserFailure(error))
     }
@@ -186,15 +208,21 @@ export const loginAsync =
         password,
       })
       const { user } = response.data
+      const getCurrentUserInfo = await api.get(`/user/${user.userId}`)
+      const userData = getCurrentUserInfo.data.user
       dispatch(
         setCurrentUserSuccess({
-          email: user.email,
           id: user.userId,
-          role: user.role,
+          email: userData.email,
+          username: userData.username,
+          birthday: userData.birthday,
+          password: "",
+          gender: userData.gender,
+          role: userData.role,
+          follower: userData.follower,
+          image: userData.image,
         }),
       )
-
-      dispatch(getProfile(user.userId))
     } catch (error: any) {
       dispatch(setCurrentUserFailure(error.message || "An error occurred"))
       throw new Error("An error occured")
@@ -203,8 +231,8 @@ export const loginAsync =
 
 export const logoutAsync = (): AppThunk => async (dispatch) => {
   try {
-    const response = await api.get("/auth/logout")
-    dispatch(logoutSuccess(response.data.message))
+    await api.get("/auth/logout")
+    dispatch(logoutSuccess())
   } catch (error) {
     console.error("Logout error:", error)
   }

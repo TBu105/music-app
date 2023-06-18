@@ -2,7 +2,6 @@ import React, { RefObject, useEffect, useRef, useState } from "react"
 import { BsBoxArrowUpRight, BsChevronDown, BsPerson } from "react-icons/bs"
 import { Link } from "react-router-dom"
 import Primary from "../Buttons/Primary"
-import { User } from "../../features/auth/types"
 import { useAppSelector } from "../../app/hooks"
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
 }
 
 const ProfileDropdown = ({ logOut }: Props) => {
-  const user = useAppSelector((state) => state.auth.user)
+  const user = useAppSelector((state) => state.auth.currentUser)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const profileRef: RefObject<HTMLDivElement> = useRef(null)
 

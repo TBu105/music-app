@@ -1,15 +1,24 @@
-import React, { useState, useRef, ChangeEvent } from "react"
-import { useAppSelector } from "../app/hooks"
+import React, { useState, useRef, ChangeEvent, useEffect } from "react"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { BsPencil, BsPerson, BsX } from "react-icons/bs"
+import { useParams } from "react-router-dom"
+import { getProfile } from "../features/auth/authSlice"
 
 const ProfilePage = () => {
   const user = useAppSelector((state) => state.auth.user)
+  const currentUser = useAppSelector((state) => state.auth.currentUser)
+  const dispatch = useAppDispatch()
+  const { id } = useParams()
   const [onHoverChooseImage, setOnHoverChooseImage] = useState(false)
-  const [onHoverUpdateImage, setonHoverUpdateImage] = useState(false)
+  const [onHoverUpdateImage, setOnHoverUpdateImage] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [preview, setPreview] = useState(user?.image)
   const [newUsername, setNewUsername] = useState(user?.username)
   const imageRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    dispatch(getProfile(id as string))
+  }, [id])
 
   const handleImageOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newImage = e.target.files
@@ -24,6 +33,11 @@ const ProfilePage = () => {
   const handleChangeOnClick = () => {
     setShowModal(true)
     imageRef.current?.click()
+  }
+  const handleChooseImageOnHover = () => {
+    if (id === currentUser?.id) {
+      setOnHoverChooseImage(true)
+    }
   }
   const closeModal = () => {
     setShowModal(false)
@@ -42,38 +56,40 @@ const ProfilePage = () => {
       />
       <div className="w-full text-linkwater">
         <div className="h-88 bg-gradient-to-b from-neutral-400 to-transparent shadow-2xl shadow-neutral-500/8 relative px-9">
-          <div className="absolute flex bottom-9 items-center gap-4">
-            <div
-              className="relative"
-              onMouseOver={() => setOnHoverChooseImage(true)}
-              onMouseOut={() => setOnHoverChooseImage(false)}
-            >
-              {user?.image === "" ? (
-                <div className="bg-neutral-700 rounded-full w-60 h-60 flex items-center justify-center shadow-lg shadow-black/50">
-                  <BsPerson size={128} />
-                </div>
-              ) : (
-                <img
-                  src={user?.image}
-                  alt="avatar"
-                  className="w-60 h-60 rounded-full object-cover shadow-lg shadow-black/50"
-                />
-              )}
-              {onHoverChooseImage && (
-                <div
-                  className="absolute top-0 w-60 h-60 text-center flex flex-col items-center justify-center bg-black/50 rounded-full"
-                  onClick={handleChangeOnClick}
-                >
-                  <BsPencil size={60} />
-                  Choose photo
-                </div>
-              )}
+          {user && (
+            <div className="absolute flex bottom-9 items-center gap-4">
+              <div
+                className="relative"
+                onMouseOver={handleChooseImageOnHover}
+                onMouseOut={() => setOnHoverChooseImage(false)}
+              >
+                {user?.image === "" ? (
+                  <div className="bg-neutral-700 rounded-full w-60 h-60 flex items-center justify-center shadow-lg shadow-black/50">
+                    <BsPerson size={128} />
+                  </div>
+                ) : (
+                  <img
+                    src={user?.image}
+                    alt="avatar"
+                    className="w-60 h-60 rounded-full object-cover shadow-lg shadow-black/50"
+                  />
+                )}
+                {onHoverChooseImage && (
+                  <div
+                    className="absolute top-0 w-60 h-60 text-center flex flex-col items-center justify-center bg-black/50 rounded-full"
+                    onClick={handleChangeOnClick}
+                  >
+                    <BsPencil size={60} />
+                    Choose photo
+                  </div>
+                )}
+              </div>
+              <div className="font-bold">
+                <p className="text-sm">Profile</p>
+                <h1 className="text-6xl">{user?.username}</h1>
+              </div>
             </div>
-            <div className="font-bold">
-              <p className="text-sm">Profile</p>
-              <h1 className="text-6xl">{user?.username}</h1>
-            </div>
-          </div>
+          )}
         </div>
       </div>
       {showModal && (
@@ -91,10 +107,10 @@ const ProfilePage = () => {
               <div className="flex py-6 items-center gap-4">
                 <div
                   className="relative"
-                  onMouseOver={() => setonHoverUpdateImage(true)}
-                  onMouseOut={() => setonHoverUpdateImage(false)}
+                  onMouseOver={() => setOnHoverUpdateImage(true)}
+                  onMouseOut={() => setOnHoverUpdateImage(false)}
                 >
-                  {preview === null ? (
+                  {preview === "" ? (
                     <div className="bg-neutral-700 rounded-full w-52 h-52 flex items-center justify-center shadow-lg shadow-black/50">
                       <BsPerson size={80} />
                     </div>

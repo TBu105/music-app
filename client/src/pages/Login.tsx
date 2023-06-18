@@ -27,13 +27,17 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      await dispatch(loginAsync(user, password))
-      setUser("")
-      setPassword("")
-      navigate("/")
-    } catch (error: any) {
-      setErrMessage(error.message)
+    if (user === "") setErrMessage("Enter email!")
+    else if (password === "") setErrMessage("Enter password!")
+    else {
+      try {
+        await dispatch(loginAsync(user, password))
+        setUser("")
+        setPassword("")
+        navigate("/")
+      } catch (error: any) {
+        setErrMessage(`${error.message}: ${loginError}`)
+      }
     }
   }
 

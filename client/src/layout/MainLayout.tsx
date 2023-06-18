@@ -5,12 +5,12 @@ import HistoryNavigation from "../components/Buttons/HistoryNavigation"
 import Primary from "../components/Buttons/Primary"
 import ProfileDropdown from "../components/Profile/ProfileDropdown"
 import { useAppSelector, useAppDispatch } from "../app/hooks"
-import { logoutAsync } from "../features/auth/authSlice"
+import { logoutAsync, selectCurrentUser } from "../features/auth/authSlice"
 
 const MainLayout = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const userExist = useAppSelector((state) => state.auth.currentUser)
+  const isLoggedIn = useAppSelector((state) => state.auth.currentUser)
 
   const handleLogOut = () => {
     dispatch(logoutAsync())
@@ -24,7 +24,7 @@ const MainLayout = () => {
         <div className="sticky top-0 z-10">
           <div className="absolute top-10 inset-x-10 flex justify-between">
             <HistoryNavigation />
-            {userExist ? (
+            {isLoggedIn ? (
               <ProfileDropdown logOut={handleLogOut} />
             ) : (
               <Primary onClick={() => navigate("/account/login")}>

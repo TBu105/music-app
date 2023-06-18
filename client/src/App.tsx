@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useAppDispatch } from "./app/hooks"
+import { useAppDispatch, useAppSelector } from "./app/hooks"
 import { getCurrentUserAsync } from "./features/auth/authSlice"
 import { AudioPlayer } from "./components/Player/AudioPlayer"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
@@ -25,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getCurrentUserAsync())
-  }, [dispatch])
+  }, [])
 
   return (
     <Router>
