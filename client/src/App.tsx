@@ -25,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getCurrentUserAsync())
-  }, [])
+  }, [dispatch])
 
   return (
     <Router>

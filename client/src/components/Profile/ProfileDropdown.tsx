@@ -3,15 +3,22 @@ import { BsBoxArrowUpRight, BsChevronDown, BsPerson } from "react-icons/bs"
 import { Link } from "react-router-dom"
 import Primary from "../Buttons/Primary"
 import { User } from "../../features/auth/types"
+import { useAppSelector } from "../../app/hooks"
 
 type Props = {
-  user: User | null
   logOut: () => void
 }
 
-const ProfileDropdown = ({ user, logOut }: Props) => {
+const ProfileDropdown = ({ logOut }: Props) => {
+  const user = useAppSelector((state) => state.auth.user)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const profileRef: RefObject<HTMLDivElement> = useRef(null)
+
+  const [avatar, setAvatar] = useState<string | null>(null)
+
+  useEffect(() => {
+    setAvatar(user?.image || null)
+  }, [user])
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -33,13 +40,13 @@ const ProfileDropdown = ({ user, logOut }: Props) => {
     <div ref={profileRef} className="h-8">
       <Primary onClick={() => setShowProfileMenu(!showProfileMenu)}>
         <div className="flex items-center p-1 gap-1 h-full">
-          {user?.image === "" ? (
+          {!avatar ? (
             <div className="bg-neutral-700 rounded-full p-1">
               <BsPerson size={16} />
             </div>
           ) : (
             <img
-              src={user?.image}
+              src={avatar}
               alt="avatar"
               className="w-6 h-6 rounded-full object-cover"
             />

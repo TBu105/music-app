@@ -7,7 +7,7 @@ const ProfilePage = () => {
   const [onHoverChooseImage, setOnHoverChooseImage] = useState(false)
   const [onHoverUpdateImage, setonHoverUpdateImage] = useState(false)
   const [showModal, setShowModal] = useState(false)
-  const [preview, setPreview] = useState<string | null | undefined>(user?.image)
+  const [preview, setPreview] = useState(user?.image)
   const [newUsername, setNewUsername] = useState(user?.username)
   const imageRef = useRef<HTMLInputElement>(null)
 
@@ -16,7 +16,7 @@ const ProfilePage = () => {
     if (newImage && newImage.length > 0) {
       const reader = new FileReader()
       reader.onload = (e) => {
-        setPreview(e.target?.result)
+        setPreview(e.target?.result as string)
       }
       reader.readAsDataURL(newImage[0])
     }

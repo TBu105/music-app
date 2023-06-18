@@ -2,11 +2,8 @@ import React, { useState, useRef, useEffect } from "react"
 import { loginAsync } from "../features/auth/authSlice"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
-import { redirectIfUser } from "../utils/redirect"
 
 const Login = () => {
-  redirectIfUser()
-
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const loginError = useAppSelector((state) => state.auth.error)
@@ -20,10 +17,6 @@ const Login = () => {
     userRef.current?.focus()
   }, [])
 
-  useEffect(() => {
-    setErrMessage(loginError || "")
-  }, [loginError])
-
   const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser(e.target.value)
   }
@@ -32,12 +25,16 @@ const Login = () => {
     setPassword(e.target.value)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    dispatch(loginAsync(user, password))
-    setUser("")
-    setPassword("")
-    navigate("/")
+    try {
+      await dispatch(loginAsync(user, password))
+      setUser("")
+      setPassword("")
+      navigate("/")
+    } catch (error: any) {
+      setErrMessage(error.message)
+    }
   }
 
   return (
@@ -59,7 +56,11 @@ const Login = () => {
           value={password}
           onChange={handleChangePassword}
         />
-        {errMessage && <div className="text-red mb-5">{errMessage}</div>}
+        {errMessage && (
+          <div className="bg-red-500 text-linkwater p-3 mt-5 rounded-lg">
+            {errMessage}
+          </div>
+        )}
         <input
           type="submit"
           value="Log In"

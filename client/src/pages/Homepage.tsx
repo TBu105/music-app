@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom"
 import ProfileDropdown from "../components/Profile/ProfileDropdown"
 
 const Homepage = () => {
-  return <div>Homepage</div>
+  const currentUser = useAppSelector((state) => state.auth.currentUser?.id)
+  return <div>{currentUser}</div>
 }
 
 export default Homepage
