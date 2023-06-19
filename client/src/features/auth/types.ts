@@ -9,8 +9,3 @@ export interface User {
   follower: number
   image: string
 }
-export interface CurrentUser {
-  email: string
-  id: string
-  role: string
-}

@@ -7,6 +7,7 @@ const Login = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const loginError = useAppSelector((state) => state.auth.error)
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
 
   const userRef = useRef<HTMLInputElement>(null)
   const [user, setUser] = useState("")
@@ -15,6 +16,7 @@ const Login = () => {
 
   useEffect(() => {
     userRef.current?.focus()
+    if (isLoggedIn) navigate("/")
   }, [])
 
   const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {

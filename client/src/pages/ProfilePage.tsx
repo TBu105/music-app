@@ -1,8 +1,13 @@
-import React, { useState, useRef, ChangeEvent, useEffect } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { BsPencil, BsPerson, BsX } from "react-icons/bs"
 import { useParams } from "react-router-dom"
-import { getProfile } from "../features/auth/authSlice"
+import {
+  getProfile,
+  updateUserByIdAsync,
+  uploadUserAvatarAsync,
+} from "../features/auth/authSlice"
+import ProfileModal from "../components/Profile/ProfileModal"
 
 const ProfilePage = () => {
   const user = useAppSelector((state) => state.auth.user)
@@ -10,18 +15,19 @@ const ProfilePage = () => {
   const dispatch = useAppDispatch()
   const { id } = useParams()
   const [onHoverChooseImage, setOnHoverChooseImage] = useState(false)
-  const [onHoverUpdateImage, setOnHoverUpdateImage] = useState(false)
   const [showModal, setShowModal] = useState(false)
-  const [preview, setPreview] = useState(user?.image)
-  const [newUsername, setNewUsername] = useState(user?.username)
+  const [preview, setPreview] = useState(currentUser?.image)
+  const [newUsername, setNewUsername] = useState(currentUser?.username)
+  const [imageFile, setImageFile] = useState<File | null>()
   const imageRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     dispatch(getProfile(id as string))
   }, [id])
 
-  const handleImageOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newImage = e.target.files
+    setImageFile(newImage?.[0])
     if (newImage && newImage.length > 0) {
       const reader = new FileReader()
       reader.onload = (e) => {
@@ -29,6 +35,7 @@ const ProfilePage = () => {
       }
       reader.readAsDataURL(newImage[0])
     }
+    e.target.value = ""
   }
   const handleChangeOnClick = () => {
     setShowModal(true)
@@ -41,15 +48,24 @@ const ProfilePage = () => {
   }
   const closeModal = () => {
     setShowModal(false)
-    setPreview(user?.image)
-    setNewUsername(user?.username)
+    setPreview(currentUser?.image)
+    setNewUsername(currentUser?.username)
+  }
+  const handleUpdateProfile = () => {
+    dispatch(uploadUserAvatarAsync(id as string, imageFile as File))
+    dispatch(
+      updateUserByIdAsync(id as string, {
+        username: newUsername,
+      }),
+    )
+    setShowModal(false)
   }
 
   return (
     <>
       <input
         type="file"
-        accept="image/*"
+        accept="image/png,image/jpeg"
         ref={imageRef}
         onChange={handleImageOnChange}
         className="hidden"
@@ -93,69 +109,28 @@ const ProfilePage = () => {
         </div>
       </div>
       {showModal && (
-        <>
-          <div
-            className="bg-black/50 fixed inset-0 z-20"
-            onClick={() => closeModal}
-          ></div>
-          <div className="fixed inset-0 flex justify-center items-center z-30">
-            <div className="w-1/3 bg-neutral-900 p-8 rounded-lg relative">
-              <h3 className="text-2xl font-bold">Profiles details</h3>
-              <button className="absolute right-8 top-8" onClick={closeModal}>
-                <BsX size={32} />
-              </button>
-              <div className="flex py-6 items-center gap-4">
-                <div
-                  className="relative"
-                  onMouseOver={() => setOnHoverUpdateImage(true)}
-                  onMouseOut={() => setOnHoverUpdateImage(false)}
-                >
-                  {preview === "" ? (
-                    <div className="bg-neutral-700 rounded-full w-52 h-52 flex items-center justify-center shadow-lg shadow-black/50">
-                      <BsPerson size={80} />
-                    </div>
-                  ) : (
-                    <img
-                      src={preview}
-                      alt="new_avatar"
-                      className="w-52 h-52 rounded-full object-cover shadow-lg shadow-black/50"
-                    />
-                  )}
-                  {onHoverUpdateImage && (
-                    <div className="absolute top-0 w-52 h-52 text-center flex flex-col items-center justify-center bg-black/50 rounded-full gap-2">
-                      <button
-                        className="hover:underline"
-                        onClick={handleChangeOnClick}
-                      >
-                        Choose photo
-                      </button>
-                      <BsPencil size={48} />
-                      <button
-                        className="hover:underline"
-                        onClick={() => setPreview("")}
-                      >
-                        Remove photo
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-col gap-2 flex-grow items-end">
-                  <input
-                    type="text"
-                    value={newUsername}
-                    onChange={(e) => {
-                      setNewUsername(e.target.value)
-                    }}
-                    className="bg-neutral-800 p-2 focus:border-neutral-500 focus:outline-none focus:border rounded-md w-full"
-                  />
-                  <button className="bg-jarcata rounded-full text-lg font-bold text-linkwater p-2 w-1/3">
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
+        <ProfileModal
+          onClose={closeModal}
+          onChange={handleChangeOnClick}
+          previewImg={preview}
+        >
+          <div className="flex flex-col gap-2 flex-grow items-end">
+            <input
+              type="text"
+              value={newUsername ? newUsername : currentUser?.username}
+              onChange={(e) => {
+                setNewUsername(e.target.value)
+              }}
+              className="bg-neutral-800 p-2 focus:border-neutral-500 focus:outline-none focus:border rounded-md w-full"
+            />
+            <button
+              className="bg-jarcata rounded-full text-lg font-bold text-linkwater p-2 w-1/3"
+              onClick={handleUpdateProfile}
+            >
+              Save
+            </button>
           </div>
-        </>
+        </ProfileModal>
       )}
     </>
   )

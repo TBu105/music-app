@@ -5,12 +5,12 @@ import HistoryNavigation from "../components/Buttons/HistoryNavigation"
 import Primary from "../components/Buttons/Primary"
 import ProfileDropdown from "../components/Profile/ProfileDropdown"
 import { useAppSelector, useAppDispatch } from "../app/hooks"
-import { logoutAsync, selectCurrentUser } from "../features/auth/authSlice"
+import { logoutAsync } from "../features/auth/authSlice"
 
 const MainLayout = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const isLoggedIn = useAppSelector((state) => state.auth.currentUser)
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
 
   const handleLogOut = () => {
     dispatch(logoutAsync())

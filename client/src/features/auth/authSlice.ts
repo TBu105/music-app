@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { AppThunk, RootState } from "../../app/store"
-import { CurrentUser, User } from "./types"
+import { User } from "./types"
 import axios from "axios"
 
 interface UserState {
@@ -16,7 +16,7 @@ const initialState: UserState = {
   error: null,
   currentUser: null,
   allUsers: [],
-  isLoggedIn: false,
+  isLoggedIn: true,
 }
 
 const authSlice = createSlice({
@@ -30,6 +30,7 @@ const authSlice = createSlice({
     },
     setCurrentUserFailure: (state, action: PayloadAction<string>) => {
       state.currentUser = null
+      state.isLoggedIn = false
       state.error = action.payload
     },
     setUserInfoSuccess: (state, action: PayloadAction<User>) => {
@@ -43,6 +44,7 @@ const authSlice = createSlice({
     logoutSuccess: (state) => {
       state.user = null
       state.currentUser = null
+      state.isLoggedIn = false
       state.error = null
     },
     getAllUsersSuccess: (state, action: PayloadAction<User[]>) => {
@@ -55,10 +57,10 @@ const authSlice = createSlice({
     },
     updateUserSuccess: (state, action: PayloadAction<User>) => {
       state.user = action.payload
+      state.currentUser = action.payload
       state.error = null
     },
     updateUserFailure: (state, action: PayloadAction<string>) => {
-      state.user = null
       state.error = action.payload
     },
     updateUserPasswordSuccess: (state) => {
@@ -75,8 +77,9 @@ const authSlice = createSlice({
       state.error = action.payload
     },
     uploadUserAvatarSuccess: (state, action: PayloadAction<string>) => {
-      if (state.user) {
+      if (state.currentUser && state.user) {
         state.user.image = action.payload
+        state.currentUser.image = action.payload
       }
       state.error = null
     },
@@ -104,12 +107,9 @@ export const {
   uploadUserAvatarFailure,
 } = authSlice.actions
 
-// Axios instance for API requests
 const api = axios.create({
-  baseURL: "/api/v1", // Replace with your API endpoint
+  baseURL: "/api/v1",
 })
-
-export const selectAuth = (state: RootState) => state.auth
 
 export const getCurrentUserAsync = (): AppThunk => async (dispatch) => {
   try {
@@ -134,9 +134,6 @@ export const getCurrentUserAsync = (): AppThunk => async (dispatch) => {
     dispatch(setCurrentUserFailure(error.message))
   }
 }
-
-export const selectCurrentUser = (state: RootState) => state.auth.currentUser
-
 export const getProfile =
   (userId: string): AppThunk =>
   async (dispatch) => {
@@ -264,9 +261,22 @@ export const updateUserByIdAsync =
   (id: string, userData: Partial<User>): AppThunk =>
   async (dispatch) => {
     try {
-      const response = await api.put(`/user/${id}`, userData)
-      const user = response.data
-      dispatch(updateUserSuccess(user))
+      const response = await api.patch(`/user/${id}`, userData)
+      const { user } = response.data
+      console.log(user)
+      dispatch(
+        updateUserSuccess({
+          id: id,
+          email: user.email,
+          username: user.username,
+          birthday: user.birthday,
+          password: "",
+          gender: user.gender,
+          role: user.role,
+          follower: user.follower,
+          image: user.image,
+        }),
+      )
     } catch (error: any) {
       dispatch(updateUserFailure(error.message))
     }
@@ -295,7 +305,7 @@ export const deleteUserByIdAsync =
   }
 
 export const uploadUserAvatarAsync =
-  (file: File): AppThunk =>
+  (id: string, file: File): AppThunk =>
   async (dispatch) => {
     try {
       const formData = new FormData()
@@ -309,6 +319,7 @@ export const uploadUserAvatarAsync =
 
       const imageURL = response.data.imageURL
       dispatch(uploadUserAvatarSuccess(imageURL))
+      dispatch(updateUserByIdAsync(id, { image: imageURL }))
     } catch (error: any) {
       dispatch(uploadUserAvatarFailure(error.message))
     }

@@ -22,10 +22,11 @@ const audio = {
 }
 const App = () => {
   const dispatch = useAppDispatch()
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
 
   useEffect(() => {
     dispatch(getCurrentUserAsync())
-  }, [])
+  }, [isLoggedIn])
 
   return (
     <Router>
