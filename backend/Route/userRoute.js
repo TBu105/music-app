@@ -7,7 +7,6 @@ const {
   updateUserById,
   updateUserPassword,
   deleteUserById,
-  uploadUserAvartar,
   showCurrentUser,
 } = require("../Controller/userController");
 
@@ -16,8 +15,6 @@ const { authenticateUser } = require("../Middleware/authentication");
 router.route("/").get(authenticateUser, getAllUsers);
 
 router.route("/currentUser").get(authenticateUser, showCurrentUser);
-
-router.route("/upload").post(uploadUserAvartar);
 
 router.route("/password").patch(authenticateUser, updateUserPassword);
 
