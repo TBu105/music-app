@@ -3,10 +3,15 @@ const User = require("../Model/User");
 const { uploadImage } = require("./uploadFIleController");
 
 const { attachTokenToCookies } = require("../Utils/jwt");
+
 const {
   checkPermissonToChangeInfo,
   checkAdminRightPermission,
 } = require("../Utils/checkPermission");
+
+const fs = require("fs");
+
+const path = require("path");
 
 // nhung function can thiet trong user controller la gi
 const getUserById = async (req, res) => {
@@ -87,7 +92,9 @@ const uploadUserAvartar = async (req, res) => {
   if (!req.files) throw Error("No file uploaded");
 
   const { image } = req.files;
+
   const fileTypes = ["image/jpeg", "image/png", "image/jpg"];
+
   const imageSize = 1024 * 1024;
 
   if (!fileTypes.includes(image.mimetype))
@@ -96,8 +103,24 @@ const uploadUserAvartar = async (req, res) => {
   if (image.size / 1024 > imageSize)
     throw Error(`Image size should be less than ${imageSize}kb`);
 
+  //upload ảnh lên cloudinary, nhận về một object gồm các thông tin liên quan đến ảnh đó
   const cloudFile = await uploadImage(image.tempFilePath);
+
   console.log(cloudFile);
+
+  //ta muốn xóa những file ảnh được đăng lên khỏi server
+  //có hai bước
+  //bước 1: lấy đường dẫn của file ảnh
+  const filePath = path.join("tmp", cloudFile.original_filename);
+
+  //bước 2: xóa file ảnh
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error("Error deleting file:", err);
+      return;
+    }
+    console.log("File deleted successfully");
+  });
 
   res
     .status(201)

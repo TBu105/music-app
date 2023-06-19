@@ -55,7 +55,8 @@ const UserSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    default: "",
+    default:
+      "http://res.cloudinary.com/music-app-cty/image/upload/v1687156704/pbphlpmuey95u7jnjhtu.jpg",
   },
 });
 

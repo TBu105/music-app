@@ -23,7 +23,7 @@ router.route("/password").patch(authenticateUser, updateUserPassword);
 
 router
   .route("/:id")
-  .get(authenticateUser, getUserById)
+  .get(getUserById)
   .patch(authenticateUser, updateUserById)
   .delete(authenticateUser, deleteUserById);
 
