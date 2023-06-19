@@ -7,15 +7,11 @@ const {
   checkAdminRightPermission,
 } = require("../Utils/checkPermission");
 
-const fs = require("fs");
-
-const path = require("path");
-
 // nhung function can thiet trong user controller la gi
 const getUserById = async (req, res) => {
   const { id } = req.params;
 
-  const user = await User.findOne({ _id: id }).select("-password");
+  const user = await User.findOne({ _id: id }).select("-password -role");
   if (!user) {
     throw Error("There is no user");
   }
@@ -50,7 +46,7 @@ const updateUserById = async (req, res) => {
   const user = await User.findOneAndUpdate({ _id: id }, req.body, {
     new: true,
     runValidators: true,
-  }).select("-password");
+  }).select("-password -role");
 
   //chi khi nguoi dang nhap, va ho tu cap nhat thong tin cho chinh ho, thi moi thay doi token
   if (req.user.userId === id) {
