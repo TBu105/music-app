@@ -24,13 +24,13 @@ const MainLayout = () => {
         <div className="sticky top-0 z-10">
           <div className="absolute top-10 inset-x-10 flex justify-between">
             <HistoryNavigation />
-            {isLoggedIn ? (
-              <ProfileDropdown logOut={handleLogOut} />
-            ) : (
+            {isLoggedIn === "loading" && ""}
+            {isLoggedIn === "false" && (
               <Primary onClick={() => navigate("/account/login")}>
                 <span className="px-4">Đăng nhập</span>
               </Primary>
             )}
+            {isLoggedIn === "true" && <ProfileDropdown logOut={handleLogOut} />}
           </div>
         </div>
         <div className="h-[10000px]">
