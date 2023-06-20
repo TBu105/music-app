@@ -7,7 +7,6 @@ const {
   updateUserById,
   updateUserPassword,
   deleteUserById,
-  uploadUserAvartar,
   showCurrentUser,
 } = require("../Controller/userController");
 
@@ -17,13 +16,11 @@ router.route("/").get(authenticateUser, getAllUsers);
 
 router.route("/currentUser").get(authenticateUser, showCurrentUser);
 
-router.route("/upload").post(uploadUserAvartar);
-
 router.route("/password").patch(authenticateUser, updateUserPassword);
 
 router
   .route("/:id")
-  .get(authenticateUser, getUserById)
+  .get(getUserById)
   .patch(authenticateUser, updateUserById)
   .delete(authenticateUser, deleteUserById);
 
