@@ -7,6 +7,8 @@ import {
   uploadAvatar,
   updateUserById,
 } from "../../features/user/userSlice"
+import { getColor, rgbToHex } from "../../utils/colorthief"
+import { setAvatar } from "../../features/auth/authSlice"
 
 const ProfileBanner = () => {
   const user = useAppSelector((state) => state.user.userData)
@@ -21,9 +23,17 @@ const ProfileBanner = () => {
   const [newUsername, setNewUsername] = useState(user?.username)
   const [imageFile, setImageFile] = useState<File | null>()
   const imageRef = useRef<HTMLInputElement>(null)
+  const [bgColor, setBgColor] = useState("#777777")
 
   useEffect(() => {
     dispatch(fetchUserById(id as string))
+      .unwrap()
+      .then((user) => {
+        getColor(user.image).then((color) => {
+          const result = rgbToHex(color as number[])
+          setBgColor(result)
+        })
+      })
   }, [id])
 
   useEffect(() => {
@@ -66,6 +76,11 @@ const ProfileBanner = () => {
               image: image,
             }),
           )
+          dispatch(setAvatar(image))
+          getColor(image).then((color) => {
+            const result = rgbToHex(color as number[])
+            setBgColor(result)
+          })
         })
     } else {
       dispatch(
@@ -87,8 +102,13 @@ const ProfileBanner = () => {
         className="hidden"
       />
       <div className="w-full text-linkwater">
-        <div className="h-88 bg-gradient-to-b from-neutral-400 to-transparent shadow-2xl shadow-neutral-500/8 relative px-9">
-          {!loading && (
+        {!loading && (
+          <div
+            style={{
+              background: `linear-gradient(to bottom, ${bgColor}, transparent`,
+            }}
+            className="h-88 shadow-2xl shadow-neutral-500/8 relative px-9"
+          >
             <div className="absolute flex bottom-9 items-center gap-4">
               <div
                 className="relative"
@@ -121,8 +141,8 @@ const ProfileBanner = () => {
                 <h1 className="text-6xl">{user?.username}</h1>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       {showModal && (
         <>

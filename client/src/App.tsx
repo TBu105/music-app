@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "./app/hooks"
-import { getCurrentUserAsync } from "./features/auth/authSlice"
+import { getCurrentUser } from "./features/auth/authSlice"
 import { AudioPlayer } from "./components/Player/AudioPlayer"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
@@ -25,7 +25,9 @@ const App = () => {
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
 
   useEffect(() => {
-    dispatch(getCurrentUserAsync())
+    if (isLoggedIn === "loading") {
+      dispatch(getCurrentUser())
+    }
   }, [isLoggedIn])
 
   return (

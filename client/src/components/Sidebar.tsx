@@ -1,6 +1,7 @@
 import React from "react"
 import BrandLogo from "../assets/brand.svg"
 import { BsFillHouseDoorFill, BsSearch } from "react-icons/bs"
+import { Link } from "react-router-dom"
 
 const Sidebar = () => {
   return (
@@ -9,11 +10,11 @@ const Sidebar = () => {
       <div className="flex flex-col gap-6 text-2xl my-6 px-2 font-bold">
         <div className="flex items-center gap-4">
           <BsFillHouseDoorFill size={32} />
-          <span>Trang chủ</span>
+          <Link to="/">Home</Link>
         </div>
         <div className="flex items-center gap-4">
           <BsSearch size={32} />
-          <span>Tìm kiếm</span>
+          <Link to="/">Search</Link>
         </div>
       </div>
     </aside>
