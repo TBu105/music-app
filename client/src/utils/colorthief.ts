@@ -1,5 +1,4 @@
-import ColorThief from "@colorthief/colorthief"
-import _ from "lodash"
+import ColorThief from "colorthief"
 
 export const getColor = (url: string) => {
   return new Promise((resolve, reject) => {
