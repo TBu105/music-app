@@ -5,11 +5,11 @@ const router = express.Router();
 const { authenticateUser } = require("../Middleware/authentication");
 
 const {
-  uploadImage,
-  uploadSong,
+  uploadFile,
+  uploadTextToFireBase,
 } = require("../Controller/uploadFileController");
 
-router.route("/image").post(authenticateUser, uploadImage);
-router.route("/video").post(authenticateUser, uploadSong);
+router.route("/file").post(authenticateUser, uploadFile);
+router.route("/text").post(authenticateUser, uploadTextToFireBase);
 
 module.exports = router;

@@ -11,7 +11,7 @@ const {
 const getUserById = async (req, res) => {
   const { id } = req.params;
 
-  const user = await User.findOne({ _id: id }).select("-password -role");
+  const user = await User.findOne({ _id: id }).select("-password");
   if (!user) {
     throw Error("There is no user");
   }
@@ -25,7 +25,8 @@ const getAllUsers = async (req, res) => {
 };
 
 const showCurrentUser = async (req, res) => {
-  res.status(201).json({ user: req.user });
+  const user = await User.findOne({ _id: req.user.userId });
+  res.status(201).json({ user });
 };
 
 const updateUserById = async (req, res) => {
@@ -46,7 +47,7 @@ const updateUserById = async (req, res) => {
   const user = await User.findOneAndUpdate({ _id: id }, req.body, {
     new: true,
     runValidators: true,
-  }).select("-password -role");
+  }).select("-password");
 
   //chi khi nguoi dang nhap, va ho tu cap nhat thong tin cho chinh ho, thi moi thay doi token
   if (req.user.userId === id) {
