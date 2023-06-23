@@ -25,7 +25,8 @@ const getAllUsers = async (req, res) => {
 };
 
 const showCurrentUser = async (req, res) => {
-  res.status(201).json({ user: req.user });
+  const user = await User.findOne({ _id: req.user.userId });
+  res.status(201).json({ user });
 };
 
 const updateUserById = async (req, res) => {
