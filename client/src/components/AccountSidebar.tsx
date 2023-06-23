@@ -1,10 +1,7 @@
-import React, { useState } from "react"
 import { BsHouseFill, BsPencil, BsPersonCircle } from "react-icons/bs"
 import { NavLink } from "react-router-dom"
 
 const AccountSidebar = () => {
-  const [selectedMenu, setSelectedMenu] = useState("overview")
-
   const active =
     "w-11/12 flex items-center gap-2 font-light bg-neutral-500/70 p-4 rounded-r-md border-r-8 border-jarcata-500"
   const disabled =

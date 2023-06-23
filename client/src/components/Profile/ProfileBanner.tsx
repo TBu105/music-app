@@ -11,28 +11,38 @@ import { getColor, rgbToHex } from "../../utils/colorthief"
 import { setAvatar } from "../../features/auth/authSlice"
 
 const ProfileBanner = () => {
-  const user = useAppSelector((state) => state.user.userData)
-  const loading = useAppSelector((state) => state.user.loading)
-  const currentUser = useAppSelector((state) => state.auth.currentUser)
-  const dispatch = useAppDispatch()
   const { id } = useParams()
+  const dispatch = useAppDispatch()
+
+  // fetching user
+  const loading = useAppSelector((state) => state.user.loading)
+  const user = useAppSelector((state) => state.user.userData)
+  const currentUser = useAppSelector((state) => state.auth.currentUser)
   const [onHoverImage, setOnHoverImage] = useState(false)
-  const [onHoverImageModal, setOnHoverImageModal] = useState(false)
+  const [bgColor, setBgColor] = useState("#777777")
+
+  // image
+  const imageRef = useRef<HTMLInputElement>(null)
+  const [imageFile, setImageFile] = useState<File | null>()
+
+  //edit profile modal
   const [showModal, setShowModal] = useState(false)
+  const [onHoverImageModal, setOnHoverImageModal] = useState(false)
   const [preview, setPreview] = useState(user?.image)
   const [newUsername, setNewUsername] = useState(user?.username)
-  const [imageFile, setImageFile] = useState<File | null>()
-  const imageRef = useRef<HTMLInputElement>(null)
-  const [bgColor, setBgColor] = useState("#777777")
+
+  const setProfileBackgroundColor = (image: string) => {
+    getColor(image).then((color) => {
+      const result = rgbToHex(color as number[])
+      setBgColor(result)
+    })
+  }
 
   useEffect(() => {
     dispatch(fetchUserById(id as string))
       .unwrap()
       .then((user) => {
-        getColor(user.image).then((color) => {
-          const result = rgbToHex(color as number[])
-          setBgColor(result)
-        })
+        setProfileBackgroundColor(user.image)
       })
   }, [id])
 
@@ -58,9 +68,8 @@ const ProfileBanner = () => {
     imageRef.current?.click()
   }
   const handleChooseImageOnHover = () => {
-    if (id === currentUser?.id) {
-      setOnHoverImage(true)
-    }
+    const userIsCurrentUser = id === currentUser?.id
+    if (userIsCurrentUser) setOnHoverImage(true)
   }
   const closeModal = () => {
     setShowModal(false)
@@ -77,10 +86,7 @@ const ProfileBanner = () => {
             }),
           )
           dispatch(setAvatar(image))
-          getColor(image).then((color) => {
-            const result = rgbToHex(color as number[])
-            setBgColor(result)
-          })
+          setProfileBackgroundColor(image)
         })
     } else {
       dispatch(

@@ -45,6 +45,8 @@ const initialState: AuthState = {
 export const getCurrentUser = createAsyncThunk(
   "auth/fetchCurrentUser",
   async () => {
+    // tao đổ thừa thằng l Huy cho đoạn code này
+    // siêu xàm lồn
     try {
       const firstResponse = await api.get("/user/currentUser")
       const id = firstResponse.data.user.userId
@@ -134,7 +136,7 @@ export const updateUserPasswordAsync =
   (oldPassword: string, newPassword: string): AppThunk =>
   async (dispatch) => {
     try {
-      await api.put("/user/updatePassword", { oldPassword, newPassword })
+      await api.patch("/user/password", { oldPassword, newPassword })
       dispatch(updateUserPasswordSuccess())
     } catch (error: any) {
       dispatch(updateUserPasswordFailure(error.message))

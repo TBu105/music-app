@@ -1,30 +1,24 @@
-import { useEffect } from "react"
-import { useAppDispatch, useAppSelector } from "../app/hooks"
-import { fetchUserById } from "../features/user/userSlice"
+import { useAppSelector } from "../app/hooks"
 import { useNavigate } from "react-router-dom"
 
 const AccountOverview = () => {
-  const dispatch = useAppDispatch()
-  const id = useAppSelector((state) => state.auth.currentUser?.id)
   const user = useAppSelector((state) => state.user.userData)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (id) dispatch(fetchUserById(id as string))
-  }, [id])
-
   return (
-    <div>
-      <h1 className="text-4xl font-medium">Account Overview</h1>
+    <>
+      <h1 className="text-4xl font-medium">Account overview</h1>
       <h3 className="text-xl font-medium mt-6">Profile</h3>
       {user && (
-        <div className="grid grid-cols-2 divide-y divide-black/20 text-neutral-400 font-light text-sm mt-2">
+        <div className="grid grid-cols-2 divide-y divide-black/20 text-neutral-400 font-light mt-2">
           <div className="py-2">Username</div>
-          <div className="py-2 border-none">{user.username}</div>
+          <div className="py-2 border-none text-black font-semibold">
+            {user.username}
+          </div>
           <div className="py-2">Email</div>
-          <div className="py-2">{user.email}</div>
+          <div className="py-2 text-black font-semibold">{user.email}</div>
           <div className="py-2">Date of birth</div>
-          <div className="py-2">
+          <div className="py-2 text-black font-semibold">
             {new Date(user.birthday).toLocaleDateString("en-US", {
               month: "long",
               day: "numeric",
@@ -32,7 +26,7 @@ const AccountOverview = () => {
             })}
           </div>
           <div className="py-2">Gender</div>
-          <div className="py-2">
+          <div className="py-2 text-black font-semibold">
             {user.gender.charAt(0).toUpperCase() + user.gender.slice(1)}
           </div>
         </div>
@@ -43,7 +37,7 @@ const AccountOverview = () => {
       >
         Edit profile
       </button>
-    </div>
+    </>
   )
 }
 

@@ -15,6 +15,8 @@ import Login from "./pages/Login"
 import RegisterPage from "./pages/RegisterPage"
 import ProfilePage from "./pages/ProfilePage"
 import AccountOverview from "./pages/AccountOverview"
+import EditProfile from "./pages/EditProfile"
+import ChangePassword from "./pages/ChangePassword"
 
 const audio = {
   url: "https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3",
@@ -43,6 +45,8 @@ const App = () => {
           <Route path="login" element={<Login />} />
           <Route path="*" element={<AccountLayout />}>
             <Route index path="overview" element={<AccountOverview />} />
+            <Route path="profile" element={<EditProfile />} />
+            <Route path="change-password" element={<ChangePassword />} />
           </Route>
         </Route>
         <Route path="/signup" element={<RegisterPage />} />
