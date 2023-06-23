@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import { loginAsync } from "../features/auth/authSlice"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 
 const Login = () => {
@@ -16,7 +16,6 @@ const Login = () => {
 
   useEffect(() => {
     userRef.current?.focus()
-    if (isLoggedIn) navigate("/")
   }, [])
 
   const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +40,10 @@ const Login = () => {
         setErrMessage(`${error.message}: ${loginError}`)
       }
     }
+  }
+
+  if (isLoggedIn === "true") {
+    return <Navigate to="/" />
   }
 
   return (

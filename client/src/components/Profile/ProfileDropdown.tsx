@@ -56,7 +56,7 @@ const ProfileDropdown = ({ logOut }: Props) => {
       {showProfileMenu ? (
         <div className="bg-neutral-800 absolute top-10 right-0 w-36 rounded-md p-1 flex flex-col text-xs font-semibold">
           <Link
-            to={"/"}
+            to={"/account/overview"}
             target="_blank"
             className="flex items-center justify-between hover:bg-neutral-600 p-2.5 rounded-sm"
           >

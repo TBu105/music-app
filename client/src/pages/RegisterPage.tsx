@@ -2,10 +2,13 @@ import { useState } from "react"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import BrandLogo from "../assets/brand-light.svg"
 import { registerAsync } from "../features/auth/authSlice"
+import { Navigate, useNavigate } from "react-router-dom"
 
 const RegisterPage = () => {
   const dispatch = useAppDispatch()
   const errMessage = useAppSelector((state) => state.auth.error)
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
+  const navigate = useNavigate()
 
   const currentDate = new Date()
   let getCurrentYear = currentDate.getFullYear()
@@ -50,7 +53,12 @@ const RegisterPage = () => {
           gender,
         ),
       )
+      navigate("/")
     } catch (error) {}
+  }
+
+  if (isLoggedIn === "true") {
+    return <Navigate to="/" />
   }
 
   return (
