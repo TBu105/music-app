@@ -1,7 +1,7 @@
-const checkPermissonToChangeInfo = (currentUser, userBeChangeInfo) => {
-  if (currentUser.userId === userBeChangeInfo) return;
+const checkPermissonToChangeInfo = (currentUser, idUserBeChangeInfo) => {
+  if (currentUser.userId === idUserBeChangeInfo) return;
   if (currentUser.role == "admin") return;
-  throw Error("Do not have permisson to change the user role");
+  throw Error("Do not have permisson");
 };
 
 const checkAdminRightPermission = (currentUser) => {

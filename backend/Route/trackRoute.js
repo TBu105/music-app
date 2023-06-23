@@ -8,6 +8,7 @@ const {
   getTrackById,
   updateTrackById,
   deleteTrackById,
+  getAllTracksOfAUser,
 } = require("../Controller/trackController");
 
 router.route("/").get(authenticateUser, getAllTrack);
@@ -17,5 +18,6 @@ router
   .get(getTrackById)
   .patch(authenticateUser, updateTrackById)
   .delete(authenticateUser, deleteTrackById);
+router.route("/alltrack/user/:id").get(authenticateUser, getAllTracksOfAUser);
 
 module.exports = router;

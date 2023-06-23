@@ -1,4 +1,5 @@
 const Track = require("../Model/Track");
+const { checkPermissonToChangeInfo } = require("../Utils/checkPermission");
 
 const createTrack = async (req, res) => {
   const { userId } = req.user;
@@ -38,10 +39,24 @@ const deleteTrackById = async (req, res) => {
   res.status(200).json({ message: "Delete Successfully", track });
 };
 
+const getAllTracksOfAUser = async (req, res) => {
+  const { id: userId } = req.params;
+  checkPermissonToChangeInfo(req.user, userId);
+  const allTracks = await Track.find({ userId: userId });
+  res
+    .status(200)
+    .json({
+      message: "Find All Successfully",
+      length: allTracks.length,
+      allTracks,
+    });
+};
+
 module.exports = {
   createTrack,
   getAllTrack,
   getTrackById,
   updateTrackById,
   deleteTrackById,
+  getAllTracksOfAUser,
 };
