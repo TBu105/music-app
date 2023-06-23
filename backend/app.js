@@ -17,6 +17,7 @@ const connectDB = require("./Database/db");
 const userRouter = require("./Route/userRoute");
 const authRouter = require("./Route/authRoute");
 const fileuploadRouter = require("./Route/fileuploadRoute");
+const trackRouter = require("./Route/trackRoute");
 
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
@@ -30,6 +31,7 @@ app.use(
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/fileupload", fileuploadRouter);
+app.use("/api/v1/track", trackRouter);
 
 //TODO: Ghi console log thông báo cho kết nối DB thành công
 
