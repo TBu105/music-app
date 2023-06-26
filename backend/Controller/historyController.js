@@ -1,21 +1,27 @@
 const History = require("../Model/History");
 
 const getAllHistoryByUserId = async (req, res) => {
-  res.send("getAllHistoryOfAUser");
+  const allHistory = await History.find({ userId: req.user.userId });
+
+  res.status(200).json({
+    message: "Get All History Of A User Successfully",
+    count: allHistory.length,
+    allHistory,
+  });
 };
-const getOneHistoryByUserIdAndHistoryId = async (req, res) => {
+const getOneHistoryByHistoryId = async (req, res) => {
   res.send("getOneHistoryById");
 };
-const deleteOneHistoryByUserIdAndHistoryId = async (req, res) => {
+const deleteOneHistoryByHistoryId = async (req, res) => {
   res.send("deleteOneHistoryById");
 };
-const deleteAllHistoryOfAUser = async (req, res) => {
+const deleteAllHistoryByUserId = async (req, res) => {
   res.send("DeleteAllHistoryOfAUser");
 };
 
 module.exports = {
   getAllHistoryByUserId,
-  getOneHistoryByUserIdAndHistoryId,
-  deleteOneHistoryByUserIdAndHistoryId,
-  deleteAllHistoryOfAUser,
+  getOneHistoryByHistoryId,
+  deleteOneHistoryByHistoryId,
+  deleteAllHistoryByUserId,
 };
