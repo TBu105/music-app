@@ -45,15 +45,11 @@ const initialState: AuthState = {
 export const getCurrentUser = createAsyncThunk(
   "auth/fetchCurrentUser",
   async () => {
-    // tao đổ thừa thằng l Huy cho đoạn code này
-    // siêu xàm lồn
     try {
-      const firstResponse = await api.get("/user/currentUser")
-      const id = firstResponse.data.user.userId
-      const secondResponse = await api.get(`/user/${id}`)
-      const user = secondResponse.data.user
+      const response = await api.get("/user/currentUser")
+      const user = response.data.user
       const transformedData: CurrentUser = {
-        id: id,
+        id: user._id,
         email: user.email,
         image: user.image,
         role: "",
