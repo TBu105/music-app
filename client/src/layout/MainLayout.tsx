@@ -6,6 +6,7 @@ import Primary from "../components/Buttons/Primary"
 import ProfileDropdown from "../components/Profile/ProfileDropdown"
 import { useAppSelector, useAppDispatch } from "../app/hooks"
 import { logoutAsync } from "../features/auth/authSlice"
+import PlayerBar from "../components/Player/PlayerBar"
 
 const MainLayout = () => {
   const navigate = useNavigate()
@@ -37,6 +38,7 @@ const MainLayout = () => {
           <Outlet />
         </div>
       </main>
+      <PlayerBar />
     </div>
   )
 }

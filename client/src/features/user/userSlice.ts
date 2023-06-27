@@ -48,17 +48,17 @@ export const fetchUserById = createAsyncThunk(
 
 export const uploadAvatar = createAsyncThunk(
   "user/updateAvatar",
-  async (file: File) => {
+  async (image: File) => {
     try {
       const formData = new FormData()
-      formData.append("image", file)
+      formData.append("file", image)
 
-      const response = await api.post("/fileupload/image", formData, {
+      const response = await api.post("/fileupload/file", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
-      return response.data.imageURL
+      return response.data.fileURL
     } catch (error: any) {
       throw Error(`Error: ${error.response.data.message}`)
     }
