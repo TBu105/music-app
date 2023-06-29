@@ -77,13 +77,13 @@ const TrackControls = ({
         <button className="hover:text-linkwater">
           <BsShuffle size={22} />
         </button>
-        <button className="hover:text-linkwater">
+        <button className="hover:text-linkwater" onClick={handlePrevious}>
           <BsSkipStartFill size={32} />
         </button>
         <button onClick={togglePlayAndPause} className="text-linkwater">
           {playing ? <BsPauseFill size={42} /> : <BsPlayFill size={42} />}
         </button>
-        <button className="hover:text-linkwater">
+        <button className="hover:text-linkwater" onClick={handleNext}>
           <BsSkipEndFill size={32} />
         </button>
         <button

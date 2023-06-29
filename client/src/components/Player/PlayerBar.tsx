@@ -1,67 +1,112 @@
-import React, { useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import TrackDetail from "./TrackDetail"
 import TrackControls from "./TrackControls"
 import ReactPlayer from "react-player"
 import VolumeSlider from "./VolumeSlider"
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
+import {
+  initQueue,
+  playerDuration,
+  playerMute,
+  playerProgress,
+  setPause,
+  setPlay,
+  setVolume,
+  toggleLoopSingleTrack,
+  nextTrack,
+  previousTrack,
+  initFirstTrack,
+} from "../../features/player/playerSlice"
+import { OnProgressProps } from "react-player/base"
 
 const PlayerBar = () => {
   const playerRef = useRef<ReactPlayer | null>(null)
-  const [playing, setPlaying] = useState<boolean>(false)
-  const [muted, setMuted] = useState<boolean>(false)
-  const [volume, setVolume] = useState<number>(0.5)
-  const [progress, setProgress] = useState<number>(0)
-  const [loop, setLoop] = useState<boolean>(false)
-  const [duration, setDuration] = useState<number>(0)
+  const {
+    progress,
+    duration,
+    playing,
+    volume,
+    muted,
+    loopTrack,
+    queue,
+    playerQueue,
+    currentSong,
+  } = useAppSelector((state) => state.player)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(initQueue())
+    dispatch(initFirstTrack())
+  }, [])
+
+  useEffect(() => {
+    console.log(queue)
+  }, [queue])
 
   const handlePlay = () => {
-    setPlaying(true)
+    dispatch(setPlay())
   }
 
   const handlePause = () => {
-    setPlaying(false)
+    dispatch(setPause())
   }
 
   const handleVolumeChange = (newVolume: number) => {
-    setVolume(newVolume)
+    dispatch(setVolume(newVolume))
   }
 
   const toggleMute = () => {
-    setMuted((prevMuted) => !prevMuted)
+    dispatch(playerMute())
   }
 
-  const handleProgress = (state: any) => {
-    setProgress(state.played)
+  const handleProgress = (state: OnProgressProps) => {
+    dispatch(playerProgress(state))
   }
 
   const handleDuration = (duration: number) => {
-    setDuration(duration)
+    dispatch(playerDuration(duration))
   }
 
   const toggleLoop = () => {
-    setLoop((prevLoop) => !prevLoop)
+    dispatch(toggleLoopSingleTrack())
   }
+
+  const handleNextSong = () => {
+    if (queue >= playerQueue.length - 1) return
+    dispatch(nextTrack())
+  }
+
+  const handlePreviousSong = () => {
+    if (queue == 0) return
+    dispatch(previousTrack())
+  }
+
   return (
     <div className="absolute bottom-0 bg-black text-linkwater w-full h-28 flex items-center justify-between px-4">
       <ReactPlayer
         ref={playerRef}
-        url={
-          "https://res.cloudinary.com/drwdeujt6/video/upload/v1685861441/y2mate.com_-_17_Move_Me_R4_Ridge_Racer_Type_4_Direct_Audio_lziel6.mp3"
-        }
+        url={currentSong?.audio}
         playing={playing}
         volume={volume}
         muted={muted}
-        loop={loop}
+        loop={loopTrack}
         onPlay={handlePlay}
         onPause={handlePause}
         onProgress={handleProgress}
         onDuration={handleDuration}
         style={{ display: "none" }}
       />
-      <TrackDetail title={""} artist={""} thumbnail={""} />
+      {currentSong && (
+        <TrackDetail
+          title={currentSong.title}
+          artist={currentSong.artist}
+          thumbnail={currentSong.thumbnail}
+        />
+      )}
       <TrackControls
         playerRef={playerRef}
         playing={playing}
-        loop={loop}
+        loop={loopTrack}
         volume={volume}
         muted={muted}
         progress={progress}
@@ -69,12 +114,8 @@ const PlayerBar = () => {
         handlePlay={handlePlay}
         handlePause={handlePause}
         toggleLoop={toggleLoop}
-        handleNext={function (): void {
-          throw new Error("Function not implemented.")
-        }}
-        handlePrevious={function (): void {
-          throw new Error("Function not implemented.")
-        }}
+        handleNext={handleNextSong}
+        handlePrevious={handlePreviousSong}
       />
       <VolumeSlider
         volume={volume}

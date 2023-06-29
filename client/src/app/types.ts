@@ -15,3 +15,10 @@ export interface CurrentUser {
   image: string
   role: string
 }
+export interface Track {
+  title: string
+  artist: string
+  thumbnail: string
+  uploader: string
+  audio: string
+}
