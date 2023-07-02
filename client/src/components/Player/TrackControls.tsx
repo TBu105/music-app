@@ -8,6 +8,7 @@ import {
   BsSkipEndFill,
   BsSkipStartFill,
 } from "react-icons/bs"
+import ProgressBar from "./ProgressBar"
 
 type Props = {
   playerRef: any
@@ -49,30 +50,27 @@ const TrackControls = ({
     }
   }
 
-  const handleSeekMouseDown = (e: any) => {
-    setSeeking(true)
-  }
-
   const handleSeekChange = (e: any) => {
-    setPlayed(parseFloat(e.target.value))
+    setSeeking(true)
+    setPlayed(parseFloat(e))
   }
 
   const handleSeekMouseUp = (e: any) => {
-    playerRef.current?.seekTo(parseFloat(e.target.value))
+    playerRef.current.seekTo(parseFloat(e))
     setSeeking(false)
   }
 
   useMemo(() => {
     setPlayed((prevPlayed) => {
-      if (!seeking && prevPlayed !== progress) {
+      if (!seeking && prevPlayed != progress) {
         return progress
       }
       return prevPlayed
     })
-  }, [progress, seeking])
+  }, [progress])
 
   return (
-    <div className="w-1/4">
+    <div className="w-1/3">
       <div className="flex justify-center gap-2 mx-auto text-neutral-800">
         <button className="hover:text-linkwater">
           <BsShuffle size={22} />
@@ -95,7 +93,7 @@ const TrackControls = ({
       </div>
       <div className="flex items-center gap-2 text-xs">
         <Duration seconds={duration * played} />
-        <div className="w-full relative flex items-center">
+        {/* <div className="w-full relative flex items-center">
           <input
             type="range"
             min={0}
@@ -108,10 +106,22 @@ const TrackControls = ({
             className="w-full h-2 rounded-lg appearance-none bg-neutral-500 accent-linkwater absolute"
           />
           <div
-            style={{ width: played * 96.2 + "%" }}
-            className="h-2 rounded-l-lg bg-jarcata-500 absolute"
-          ></div>
-        </div>
+            style={{ width: played * 100 + "%" }}
+            className="h-2 rounded-lg bg-jarcata-500 absolute flex justify-end items-center"
+          >
+            <div className="h-3 w-3 rounded-lg bg-linkwater absolute right-0"></div>
+          </div>
+        </div> */}
+        <ProgressBar
+          currentTime={played}
+          duration={duration}
+          onTimeUpdate={function (time: number): void {
+            handleSeekChange(time)
+          }}
+          onMouseUpSeek={function (time: number): void {
+            handleSeekMouseUp(time)
+          }}
+        />
         <Duration seconds={duration} />
       </div>
     </div>

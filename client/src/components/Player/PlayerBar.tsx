@@ -82,7 +82,7 @@ const PlayerBar = () => {
   }
 
   return (
-    <div className="absolute bottom-0 bg-black text-linkwater w-full h-28 flex items-center justify-between px-4">
+    <div className="absolute bottom-0 bg-black text-linkwater w-full h-28 flex items-center justify-between">
       <ReactPlayer
         ref={playerRef}
         url={currentSong?.audio}

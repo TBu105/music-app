@@ -6,13 +6,13 @@ type Props = {
 
 const TrackDetail = ({ title, artist, thumbnail }: Props) => {
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 px-4">
       <img
         src={thumbnail}
         alt="thumbnail"
         width={72}
         height={72}
-        className="rounded-lg"
+        className="rounded-lg object-cover"
       />
       <div>
         <h3 className="text-xl font-bold">{title}</h3>
