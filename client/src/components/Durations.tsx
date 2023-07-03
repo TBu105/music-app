@@ -1,8 +1,6 @@
 export const Duration = ({ seconds }: { seconds: number }) => {
   return (
-    <time className="select-none" dateTime={`P${Math.round(seconds)}S`}>
-      {formatTime(seconds)}
-    </time>
+    <time dateTime={`P${Math.round(seconds)}S`}>{formatTime(seconds)}</time>
   )
 }
 

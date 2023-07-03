@@ -18,6 +18,10 @@ const Login = () => {
     userRef.current?.focus()
   }, [])
 
+  useEffect(() => {
+    if (loginError) setErrMessage(loginError)
+  }, [loginError])
+
   const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser(e.target.value)
   }
@@ -36,9 +40,7 @@ const Login = () => {
         setUser("")
         setPassword("")
         navigate("/")
-      } catch (error: any) {
-        setErrMessage(`${error.message}: ${loginError}`)
-      }
+      } catch (error: any) {}
     }
   }
 

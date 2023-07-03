@@ -8,44 +8,51 @@ type Props = {
 }
 
 const ProgressBar = (props: Props) => {
-  const [hover, setHover] = useState(false)
   const { currentTime, onTimeUpdate, onMouseUpSeek } = props
+  const [hover, setHover] = useState(false)
 
   const currentPercentage = currentTime * 100
 
-  const calcClickedTime = (e: any) => {
-    const clickPositionInPage = e.pageX
-    const bar = document.querySelector(".bar__progress") as HTMLElement
-    const barStart = bar.getBoundingClientRect().left + window.scrollX
-    const barWidth = bar.offsetWidth
-    const clickPositionInBar = clickPositionInPage - barStart
-    const progressSeeked = clickPositionInBar / barWidth
-    // fucking hacky way to make a max & min range
-    if (clickPositionInBar > barWidth) return 1
-    if (clickPositionInBar < 0) return 0
-    return progressSeeked // value return is a decimal between 0 & 1
-  }
-
   const handleTimeDrag = (e: any) => {
-    onTimeUpdate(calcClickedTime(e))
-
-    const updateTimeOnMove = (eMove: any) => {
-      onTimeUpdate(calcClickedTime(eMove))
+    const timeline = document.querySelector(".bar__progress") as HTMLElement
+    setHover(true)
+    let isScrubbing = false
+    function toggleScrubbing(e: any) {
+      const rect = timeline.getBoundingClientRect()
+      const percent =
+        Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width
+      isScrubbing = (e.buttons & 1) === 1
+      if (isScrubbing) {
+        handleTimeLineUpdate(e)
+      } else {
+        onMouseUpSeek(percent)
+      }
     }
-
-    document.addEventListener("mousemove", updateTimeOnMove)
-
-    document.addEventListener("mouseup", () => {
-      document.removeEventListener("mousemove", updateTimeOnMove)
+    const handleTimeLineUpdate = (e: any) => {
+      const rect = timeline.getBoundingClientRect()
+      const percent =
+        Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width
+      if (isScrubbing) {
+        e.preventDefault()
+        setHover(true)
+      }
+      onTimeUpdate(percent)
+    }
+    timeline.addEventListener("mouseleave", () => setHover(false))
+    timeline.addEventListener("mousedown", toggleScrubbing)
+    document.addEventListener("mouseup", (e) => {
+      if (isScrubbing) toggleScrubbing(e)
+      else setHover(false)
+    })
+    document.addEventListener("mousemove", (e) => {
+      if (isScrubbing) {
+        handleTimeLineUpdate(e)
+      }
     })
   }
 
   return (
-    <div
-      className="w-full relative flex items-center"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-    >
+    <div className="w-full flex items-center">
       <div
         className="bar__progress h-[5px] rounded-lg w-full"
         style={{
@@ -53,8 +60,7 @@ const ProgressBar = (props: Props) => {
             hover ? "#5B4884" : "white"
           } ${currentPercentage}%, rgb(115 115 115) 0)`,
         }}
-        onMouseDown={handleTimeDrag}
-        onMouseUp={(e) => onMouseUpSeek(calcClickedTime(e))}
+        onMouseOver={handleTimeDrag}
       >
         <span
           className="bar__progress__knob relative bg-linkwater h-3 w-3 -top-[2.5px] rounded-full hidden"

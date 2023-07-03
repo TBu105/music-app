@@ -71,7 +71,7 @@ const TrackControls = ({
 
   return (
     <div className="w-1/3">
-      <div className="flex justify-center gap-2 mx-auto text-neutral-800">
+      <div className="flex justify-center gap-2 mx-auto text-neutral-600">
         <button className="hover:text-linkwater">
           <BsShuffle size={22} />
         </button>
@@ -93,25 +93,6 @@ const TrackControls = ({
       </div>
       <div className="flex items-center gap-2 text-xs">
         <Duration seconds={duration * played} />
-        {/* <div className="w-full relative flex items-center">
-          <input
-            type="range"
-            min={0}
-            max={0.999999}
-            step="any"
-            value={played}
-            onMouseDown={handleSeekMouseDown}
-            onChange={handleSeekChange}
-            onMouseUp={handleSeekMouseUp}
-            className="w-full h-2 rounded-lg appearance-none bg-neutral-500 accent-linkwater absolute"
-          />
-          <div
-            style={{ width: played * 100 + "%" }}
-            className="h-2 rounded-lg bg-jarcata-500 absolute flex justify-end items-center"
-          >
-            <div className="h-3 w-3 rounded-lg bg-linkwater absolute right-0"></div>
-          </div>
-        </div> */}
         <ProgressBar
           currentTime={played}
           duration={duration}

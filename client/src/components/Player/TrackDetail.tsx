@@ -6,7 +6,7 @@ type Props = {
 
 const TrackDetail = ({ title, artist, thumbnail }: Props) => {
   return (
-    <div className="flex gap-4 px-4">
+    <div className="flex gap-4 px-4 w-64">
       <img
         src={thumbnail}
         alt="thumbnail"
