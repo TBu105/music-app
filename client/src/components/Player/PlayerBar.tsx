@@ -80,6 +80,11 @@ const PlayerBar = () => {
     if (queue == 0) return
     dispatch(previousTrack())
   }
+  const handleEnded = () => {
+    if (queue >= playerQueue.length - 1) return
+    dispatch(nextTrack())
+    dispatch(setPlay())
+  }
 
   return (
     <div className="absolute bottom-0 bg-black text-linkwater w-full h-28 flex items-center justify-between">
@@ -94,6 +99,7 @@ const PlayerBar = () => {
         onPause={handlePause}
         onProgress={handleProgress}
         onDuration={handleDuration}
+        onEnded={handleEnded}
         style={{ display: "none" }}
       />
       {currentSong && (

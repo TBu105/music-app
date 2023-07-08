@@ -7,6 +7,7 @@ import ProfileDropdown from "../components/Profile/ProfileDropdown"
 import { useAppSelector, useAppDispatch } from "../app/hooks"
 import { logoutAsync } from "../features/auth/authSlice"
 import PlayerBar from "../components/Player/PlayerBar"
+import Upload from "../components/Buttons/Upload"
 
 const MainLayout = () => {
   const navigate = useNavigate()
@@ -31,7 +32,12 @@ const MainLayout = () => {
                 <span className="px-4">Đăng nhập</span>
               </Primary>
             )}
-            {isLoggedIn === "true" && <ProfileDropdown logOut={handleLogOut} />}
+            {isLoggedIn === "true" && (
+              <div className="flex gap-2">
+                <Upload />
+                <ProfileDropdown logOut={handleLogOut} />
+              </div>
+            )}
           </div>
         </div>
         <div className="h-[10000px]">

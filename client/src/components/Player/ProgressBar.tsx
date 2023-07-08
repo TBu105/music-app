@@ -25,7 +25,7 @@ const ProgressBar = (props: Props) => {
       if (isScrubbing) {
         handleTimeLineUpdate(e)
       } else {
-        onMouseUpSeek(percent)
+        onMouseUpSeek(percent - 0.00001)
       }
     }
     const handleTimeLineUpdate = (e: any) => {
@@ -65,7 +65,7 @@ const ProgressBar = (props: Props) => {
         <span
           className="bar__progress__knob relative bg-linkwater h-3 w-3 -top-[2.5px] rounded-full hidden"
           style={{
-            left: `${currentPercentage - 2}%`,
+            left: `${Math.max(0, currentPercentage - 2)}%`,
             display: `${hover ? "block" : "none"}`,
           }}
         />

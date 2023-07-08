@@ -21,6 +21,7 @@ export default {
           500: "#5B4884",
         },
         tundora: "#404040",
+        card: "#0F0F13",
       },
       fontFamily: {
         exo: ["'Exo 2'", "Lato", "sans-serif"],

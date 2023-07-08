@@ -23,7 +23,7 @@ const initialState: PlayerState = {
   progress: 0,
   duration: 0,
   playing: false,
-  volume: 0.5,
+  volume: Number(localStorage.getItem("volume")),
   muted: false,
   shuffle: false,
   loopTrack: false,
@@ -49,7 +49,8 @@ export const initQueue = (): AppThunk => async (dispatch) => {
     title: "Hidamari no Uta",
     artist: "Yuyoyuppe",
     thumbnail: "https://i.ytimg.com/vi/A13rIzQoM80/maxresdefault.jpg",
-    audio: "https://www.youtube.com/watch?v=aFFUaDUJL5k",
+    audio:
+      "https://res.cloudinary.com/drwdeujt6/video/upload/v1685861104/%E9%99%BD%E3%81%A0%E3%81%BE%E3%82%8A%E3%81%AE%E8%A9%A9_%E3%82%AB%E3%83%A9%E3%82%AA%E3%82%B1_wx28dp.mp3",
     uploader: "",
   }
   console.log(song)
@@ -68,6 +69,7 @@ const playerSlice = createSlice({
     },
     setVolume: (state, action: PayloadAction<number>) => {
       state.volume = action.payload
+      localStorage.setItem("volume", action.payload.toString())
     },
     playerMute: (state) => {
       state.muted = !state.muted
@@ -94,6 +96,7 @@ const playerSlice = createSlice({
     },
     nextTrack: (state) => {
       state.queue += 1
+      state.progress = 0
       state.currentSong = state.playerQueue[state.queue]
     },
   },

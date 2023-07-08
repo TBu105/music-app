@@ -25,7 +25,7 @@ const VolumeSlider = ({
       </button>
       <input
         type="range"
-        className="w-[50%] h-2 rounded-lg appearance-none bg-neutral-500 accent-linkwater"
+        className="w-[50%] h-1 rounded-lg appearance-none bg-neutral-500 accent-linkwater"
         min={0}
         max={1}
         step={0.001}
