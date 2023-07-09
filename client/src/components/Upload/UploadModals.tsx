@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { BsX } from "react-icons/bs"
 import UploadTabSelect from "./UploadTabSelect"
+import TabsContent from "./TabsContent"
 
 type Props = {
   show: boolean
@@ -16,8 +17,8 @@ const UploadModals = (props: Props) => {
           className="bg-black/50 fixed inset-0 z-20"
           onClick={props.onClose}
         ></div>
-        <div className="fixed w-1/2 h-fit inset-0 m-auto z-30">
-          <div className="bg-neutral-900 p-8 rounded-lg relative">
+        <div className="fixed w-2/5 h-[90%] inset-0 m-auto z-30">
+          <div className="bg-neutral-900 p-8 rounded-lg relative h-full">
             <h1 className="text-3xl font-bold">Upload your music</h1>
             <button className="absolute right-2 top-2">
               <BsX size={32} />
@@ -28,6 +29,7 @@ const UploadModals = (props: Props) => {
                 setActive(tab)
               }}
             />
+            <TabsContent active={active} />
           </div>
         </div>
       </>
