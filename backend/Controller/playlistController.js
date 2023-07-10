@@ -79,6 +79,38 @@ const deleteTrackFromPlaylist = async (req, res) => {
     .json({ message: "Delete track from playlist successfully", playlist });
 };
 
+const addTrackToLikedMusic = async (req, res) => {
+  const { trackid } = req.params;
+
+  const playlist = await Playlist.findByIdAndUpdate(
+    { _id: "64abbb516484a75ae1ddeae0" },
+    { $push: { trackId: trackid } },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res
+    .status(200)
+    .json({ message: "Add track to liked music successfully", playlist });
+};
+const deleteTrackFromLikedMusic = async (req, res) => {
+  const { trackid } = req.params;
+  const playlist = await Playlist.findByIdAndUpdate(
+    { _id: "64abbb516484a75ae1ddeae0" },
+    { $pull: { trackId: trackid } },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res
+    .status(200)
+    .json({ message: "Delete track from liked music successfully", playlist });
+};
+
 module.exports = {
   createPlaylist,
   getAllPlaylistOfAUser,
@@ -87,4 +119,6 @@ module.exports = {
   deletePlaylistById,
   addTrackToPlaylist,
   deleteTrackFromPlaylist,
+  addTrackToLikedMusic,
+  deleteTrackFromLikedMusic,
 };

@@ -10,6 +10,8 @@ const {
   deletePlaylistById,
   addTrackToPlaylist,
   deleteTrackFromPlaylist,
+  addTrackToLikedMusic,
+  deleteTrackFromLikedMusic,
 } = require("../Controller/playlistController");
 
 router.route("/all/:userid").get(authenticateUser, getAllPlaylistOfAUser);
@@ -19,6 +21,11 @@ router
   .get(authenticateUser, getPlaylistById)
   .patch(authenticateUser, updatePlaylistById)
   .delete(authenticateUser, deletePlaylistById);
+
+router
+  .route("/likedmusic/track/:trackid")
+  .post(authenticateUser, addTrackToLikedMusic)
+  .delete(authenticateUser, deleteTrackFromLikedMusic);
 router
   .route("/:playlistid/track/:trackid")
   .post(authenticateUser, addTrackToPlaylist)
