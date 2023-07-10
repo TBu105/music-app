@@ -6,13 +6,15 @@ const register = async (req, res) => {
   const { email, username, birthday, password, gender, image } = req.body;
 
   if (!email || !username || !birthday || !gender || !password) {
-    throw Error("You need to field all the information");
+    return res
+      .status(500)
+      .json({ error: "You need to field all the information" });
   }
 
   const emailAlreadyExist = await User.findOne({ email });
 
   if (emailAlreadyExist) {
-    throw Error("User is already exist");
+    return res.status(500).json({ error: "User is already exist" });
   }
 
   const isFirstAccount = (await User.countDocuments({})) === 0;
@@ -40,17 +42,19 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    throw Error("You need to field all the information");
+    return res
+      .status(500)
+      .json({ error: "You need to field all the information" });
   }
 
   const user = await User.findOne({ email });
   if (!user) {
-    throw Error("User is not exist");
+    return res.status(500).json({ error: "User is not exist" });
   }
 
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw Error("Password is invalid");
+    return res.status(500).json({ error: "Password is invalid" });
   }
 
   const tokenUser = { email: user.email, userId: user._id, role: user.role };

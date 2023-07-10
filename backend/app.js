@@ -19,6 +19,7 @@ const authRouter = require("./Route/authRoute");
 const fileuploadRouter = require("./Route/fileuploadRoute");
 const trackRouter = require("./Route/trackRoute");
 const historyRouter = require("./Route/historyRoute");
+const playlistRouter = require("./Route/playlistRoute");
 
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
@@ -34,6 +35,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/fileupload", fileuploadRouter);
 app.use("/api/v1/track", trackRouter);
 app.use("/api/v1/history", historyRouter);
+app.use("/api/v1/playlist", playlistRouter);
 
 //TODO: Ghi console log thông báo cho kết nối DB thành công
 

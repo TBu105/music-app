@@ -33,6 +33,22 @@ const TrackSchema = new mongoose.Schema(
       require: [true, "Your song must have lyrics"],
       minlength: [1, "Your song must have more than 1 character"],
     },
+    publicDate: {
+      type: Date,
+      default: new Date(),
+    },
+    duration: {
+      type: Number,
+      require: [true, "Your song must have duration"],
+    },
+    isPublic: {
+      type: Boolean,
+      default: true,
+    },
+    isBanned: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
