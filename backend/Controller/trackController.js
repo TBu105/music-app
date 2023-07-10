@@ -6,6 +6,11 @@ const createTrack = async (req, res) => {
   const { userId } = req.user;
   req.body.userId = userId;
 
+  // const cloudFile = getCloudFile();
+  // console.log(cloudFile);
+  // req.body.duration = cloudFile.duration;
+  // req.body.audio = cloudFile.url;
+
   const track = await Track.create(req.body);
 
   res.status(201).json({ message: "Create track successfully", track });
@@ -23,13 +28,14 @@ const getTrackById = async (req, res) => {
   const historyBody = { userId: req.user.userId, trackId: req.params.id };
 
   const history = await History.create(historyBody);
-  console.log("hehe", history);
 
   res.status(200).json({ message: "Find Track Successfully", track });
 };
 const updateTrackById = async (req, res) => {
   if (req.body.hasOwnProperty("userId")) {
-    throw Error("Do not have permisson to change user's song");
+    return res
+      .status(500)
+      .json({ error: "Do not have permisson to change user's song" });
   }
   const updateTrack = await Track.findByIdAndUpdate(
     { _id: req.params.id },

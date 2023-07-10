@@ -13,7 +13,7 @@ const getUserById = async (req, res) => {
 
   const user = await User.findOne({ _id: id }).select("-password -role");
   if (!user) {
-    throw Error("There is no user");
+    return res.status(500).json({ error: "There is no user" });
   }
 
   res.status(200).json({ message: "Take user success", user });
@@ -62,7 +62,7 @@ const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
   if (!oldPassword || !newPassword) {
-    throw Error("Please fill all the field");
+    return res.status(500).json({ error: "Please fill all the field" });
   }
 
   const user = await User.findOne({ _id: req.user.userId });

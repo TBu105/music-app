@@ -19,7 +19,7 @@ const uploadFileToCloudinary = async (file) => {
     { resource_type: "auto" },
     (error, result) => {
       if (error) {
-        throw Error("Error to upload file: ", error);
+        return res.status(500).json({ error });
       }
       return result;
     }
@@ -32,7 +32,7 @@ const uploadTextToCloudinary = async (file) => {
     { resource_type: "raw" },
     (error, result) => {
       if (error) {
-        throw Error("Error to upload text: ", error);
+        return res.status(500).json({ error });
       }
       return result;
     }
@@ -55,12 +55,18 @@ const deleteFileInTMPFolder = (cloudFile) => {
   });
 };
 const uploadFile = async (req, res) => {
-  if (!req.files) throw Error("No file uploaded");
+  if (!req.files) return res.status(500).json({ error: "No file uploaded" });
 
   const { file } = req.files;
 
+  console.log(file);
+
   //upload ảnh lên cloudinary, nhận về một object gồm các thông tin liên quan đến ảnh đó
   const cloudFile = await uploadFileToCloudinary(file.tempFilePath);
+
+  // if (cloudFile.hasOwnProperty("duration")) {
+  //   getCloudFile(cloudFile);
+  // }
 
   console.log(cloudFile);
 
