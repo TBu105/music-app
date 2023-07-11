@@ -32,16 +32,10 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (user === "") setErrMessage("Enter email!")
-    else if (password === "") setErrMessage("Enter password!")
-    else {
-      try {
-        await dispatch(loginAsync(user, password))
-        setUser("")
-        setPassword("")
-        navigate("/")
-      } catch (error: any) {}
-    }
+    await dispatch(loginAsync(user, password))
+    setUser("")
+    setPassword("")
+    navigate("/")
   }
 
   if (isLoggedIn === "true") {

@@ -20,7 +20,7 @@ const UploadModals = (props: Props) => {
         <div className="fixed w-2/5 h-[90%] inset-0 m-auto z-30">
           <div className="bg-neutral-900 p-8 rounded-lg relative h-full">
             <h1 className="text-3xl font-bold">Upload your music</h1>
-            <button className="absolute right-2 top-2">
+            <button className="absolute right-2 top-2" onClick={props.onClose}>
               <BsX size={32} />
             </button>
             <UploadTabSelect

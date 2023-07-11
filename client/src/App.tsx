@@ -16,12 +16,14 @@ import ProfilePage from "./pages/ProfilePage"
 import AccountOverview from "./pages/AccountOverview"
 import EditProfile from "./pages/EditProfile"
 import ChangePassword from "./pages/ChangePassword"
+import { getNewUpload } from "./features/track/trackSlice"
 
 const App = () => {
   const dispatch = useAppDispatch()
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
 
   useEffect(() => {
+    dispatch(getNewUpload())
     if (isLoggedIn === "loading") {
       dispatch(getCurrentUser())
     }

@@ -113,9 +113,10 @@ export const loginAsync =
           role: "",
         }),
       )
-    } catch (error: any) {
-      dispatch(setCurrentUserFailure(error.message || "An error occurred"))
-      throw new Error("An error occured")
+    } catch (err: any) {
+      dispatch(
+        setCurrentUserFailure(err.response.data.error || "An error occurred"),
+      )
     }
   }
 

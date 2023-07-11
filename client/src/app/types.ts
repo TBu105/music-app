@@ -21,4 +21,9 @@ export interface Track {
   thumbnail: string
   uploader: string
   audio: string
+  lyrics: string
+  publicDate?: Date
+  duration: number
+  privacy: boolean
+  banned: boolean
 }

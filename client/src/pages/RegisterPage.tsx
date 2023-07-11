@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import BrandLogo from "../assets/brand-light.svg"
 import { registerAsync } from "../features/auth/authSlice"

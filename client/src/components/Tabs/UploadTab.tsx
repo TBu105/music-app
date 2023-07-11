@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { BsSoundwave } from "react-icons/bs"
 import TrackAccordion from "../Accordions/TrackAccordion"
@@ -6,10 +6,11 @@ import TrackAccordion from "../Accordions/TrackAccordion"
 type Props = {}
 
 const UploadTab = (props: Props) => {
-  const [uploadOption, setUploadOption] = useState("collective")
-  const [privacyOption, setPrivacyOption] = useState("public")
+  const [uploadOption, setUploadOption] = useState("separates")
+  const [privacyOption, setPrivacyOption] = useState(true)
   const [files, setFiles] = useState<File[]>([])
   const [active, setActive] = useState("")
+  const trackRef = useRef()
   const onDrop = useCallback((acceptedFiles: any) => {
     acceptedFiles.forEach((file: File) => {
       setFiles((oldFiles) => {
@@ -28,8 +29,12 @@ const UploadTab = (props: Props) => {
     setUploadOption(newOption)
   }
   const handlePrivacyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newOption = e.target.value
+    const newOption = e.target.value === "true"
     setPrivacyOption(newOption)
+  }
+  const handleOnCancel = (index: number) => {
+    files.splice(index, 1)
+    setFiles([...files])
   }
   return (
     <div className="flex flex-col gap-2">
@@ -44,6 +49,8 @@ const UploadTab = (props: Props) => {
                 setActive={(index: string) => {
                   setActive(index)
                 }}
+                defaultPrivacy={privacyOption}
+                onCancel={() => handleOnCancel(index)}
               />
             ))}
           {uploadOption == "collective" && "many"}
@@ -76,15 +83,15 @@ const UploadTab = (props: Props) => {
               <input
                 type="radio"
                 className="form-radio text-red-500"
-                value={"public"}
-                checked={privacyOption === "public"}
+                value={"true"}
+                checked={privacyOption}
                 onChange={handlePrivacyChange}
               />
               <span>Public</span>
               <input
                 type="radio"
-                value={"private"}
-                checked={privacyOption === "private"}
+                value={"false"}
+                checked={!privacyOption}
                 onChange={handlePrivacyChange}
               />
               <span>Private</span>

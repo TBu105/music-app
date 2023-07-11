@@ -1,22 +1,36 @@
 import React from "react"
 import { BsPlayFill } from "react-icons/bs"
+import { Track } from "../../app/types"
+import { useAppDispatch } from "../../app/hooks"
+import { addToQueue, playNewSong } from "../../features/player/playerSlice"
 
 type Props = {
-  songId?: String
-  title: String
-  artist: String
+  track: Track
 }
 
-const TrackCard = (props: Props) => {
+const TrackCard = ({ track }: Props) => {
+  const dispatch = useAppDispatch()
+  const handlePlaySong = () => {
+    dispatch(addToQueue(track))
+    dispatch(playNewSong())
+  }
   return (
-    <div className="bg-neutral-900 h-72 flex-1 my-4 rounded-md p-4 overflow-hidden hover:bg-neutral-800 transition-colors duration-500 group">
-      <div className="aspect-square bg-gradient-to-r from-cyan-600 to-blue-600 rounded drop-shadow-lg relative">
-        <div className="rounded-full w-12 aspect-square absolute -bottom-2 right-1 bg-jarcata-500 flex justify-center items-center opacity-0 group-hover:opacity-100 group-hover:bottom-1 transition-all duration-500">
+    <div className="bg-neutral-900 h-72 my-4 rounded-md p-4 overflow-hidden hover:bg-neutral-800 transition-colors duration-500 group">
+      <div className="relative">
+        <img
+          src={track.thumbnail}
+          alt=""
+          className="w-44 aspect-square object-fill rounded"
+        />
+        <div
+          className="rounded-full w-12 aspect-square absolute -bottom-2 right-1 bg-jarcata-500 flex justify-center items-center opacity-0 group-hover:opacity-100 group-hover:bottom-1 transition-all duration-500"
+          onClick={handlePlaySong}
+        >
           <BsPlayFill size={28} />
         </div>
       </div>
-      <p className="mt-2 text-2xl font-bold">{props.title}</p>
-      <span className="opacity-60 text-sm">{props.artist}</span>
+      <p className="mt-2 text-2xl font-bold">{track.title}</p>
+      <span className="opacity-60 text-sm">{track.artist}</span>
     </div>
   )
 }

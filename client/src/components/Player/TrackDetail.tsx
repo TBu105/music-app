@@ -10,9 +10,7 @@ const TrackDetail = ({ title, artist, thumbnail }: Props) => {
       <img
         src={thumbnail}
         alt="thumbnail"
-        width={72}
-        height={72}
-        className="rounded-lg object-cover"
+        className="rounded-lg object-cover w-[72px] aspect-square"
       />
       <div>
         <h3 className="text-xl font-bold">{title}</h3>

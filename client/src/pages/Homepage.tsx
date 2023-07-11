@@ -1,9 +1,10 @@
+import { BsPlayFill } from "react-icons/bs"
 import { useAppSelector } from "../app/hooks"
+import { Track } from "../app/types"
 import TrackCard from "../components/Card/TrackCard"
 
 const Homepage = () => {
-  const currentUser = useAppSelector((state) => state.auth.currentUser?.id)
-
+  const newSong = useAppSelector((state) => state.track.newUpload)
   const fakeData = () => {
     var lorem =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc magna metus, vestibulum ut dapibus a, tincidunt eu nunc. Donec in lorem augue. Pellentesque tempus neque lacus, eget dignissim massa finibus nec."
@@ -32,9 +33,10 @@ const Homepage = () => {
             <p className="mt-2 text-2xl font-bold">Lorem</p>
             <span className="opacity-60 text-sm">ipsum</span>
           </div> */}
-          {data.map((s: any) => (
-            <TrackCard title={s.title} artist={s.artist} />
-          ))}
+          {newSong.length > 0 &&
+            newSong.map((track: Track, index) => (
+              <TrackCard track={track} key={index} />
+            ))}
         </div>
       </div>
     </div>

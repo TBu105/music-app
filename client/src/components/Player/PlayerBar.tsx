@@ -5,7 +5,6 @@ import ReactPlayer from "react-player"
 import VolumeSlider from "./VolumeSlider"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import {
-  initQueue,
   playerDuration,
   playerMute,
   playerProgress,
@@ -15,7 +14,6 @@ import {
   toggleLoopSingleTrack,
   nextTrack,
   previousTrack,
-  initFirstTrack,
 } from "../../features/player/playerSlice"
 import { OnProgressProps } from "react-player/base"
 
@@ -35,12 +33,8 @@ const PlayerBar = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(initQueue())
-    dispatch(initFirstTrack())
-  }, [])
-
-  useEffect(() => {
     console.log(queue)
+    console.log(playerQueue)
   }, [queue])
 
   const handlePlay = () => {
@@ -102,12 +96,14 @@ const PlayerBar = () => {
         onEnded={handleEnded}
         style={{ display: "none" }}
       />
-      {currentSong && (
+      {currentSong ? (
         <TrackDetail
           title={currentSong.title}
           artist={currentSong.artist}
           thumbnail={currentSong.thumbnail}
         />
+      ) : (
+        <div className="w-64"></div>
       )}
       <TrackControls
         playerRef={playerRef}
