@@ -30,12 +30,14 @@ const Login = () => {
     setPassword(e.target.value)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    await dispatch(loginAsync(user, password))
-    setUser("")
-    setPassword("")
-    navigate("/")
+    dispatch(loginAsync(user, password))
+    if (isLoggedIn == "true") {
+      navigate("/")
+      setUser("")
+      setPassword("")
+    }
   }
 
   if (isLoggedIn === "true") {
