@@ -40,7 +40,6 @@ const TrackControls = ({
 }: Props) => {
   const [played, setPlayed] = useState<number>(0)
   const [seeking, setSeeking] = useState<boolean>(false)
-  const playPauseButtonRef = useRef<HTMLButtonElement>(null)
 
   const togglePlayAndPause = () => {
     if (playing) {

@@ -15,7 +15,7 @@ const TrackCard = ({ track }: Props) => {
     dispatch(playNewSong())
   }
   return (
-    <div className="bg-neutral-900 h-72 my-4 rounded-md p-4 overflow-hidden hover:bg-neutral-800 transition-colors duration-500 group">
+    <div className="bg-neutral-900 h-72 rounded-md p-4 overflow-hidden hover:bg-neutral-800 transition-colors duration-500 group">
       <div className="relative">
         <img
           src={track.thumbnail}
@@ -29,7 +29,7 @@ const TrackCard = ({ track }: Props) => {
           <BsPlayFill size={28} />
         </div>
       </div>
-      <p className="mt-2 text-2xl font-bold">{track.title}</p>
+      <p className="mt-2 font-extrabold truncate">{track.title}</p>
       <span className="opacity-60 text-sm">{track.artist}</span>
     </div>
   )

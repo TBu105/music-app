@@ -1,6 +1,7 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { BsDashLg, BsPencilFill, BsPlus } from "react-icons/bs"
-import Primary from "../Buttons/Primary"
+import { useAppDispatch } from "../../app/hooks"
+import { uploadTrack } from "../../features/track/trackSlice"
 
 type Props = {
   file: File
@@ -17,18 +18,12 @@ const TrackAccordion = ({
   onCancel,
   defaultPrivacy,
 }: Props) => {
+  const dispatch = useAppDispatch()
   //Form
   const [title, setTitle] = useState("")
   const [artist, setArtist] = useState("")
   const [publicDate, setPublicDate] = useState<Date>()
   const [privacy, setPrivacy] = useState(defaultPrivacy)
-  // const audio = new Audio()
-  // audio.src = URL.createObjectURL(file)
-
-  // audio.addEventListener("loadedmetadata", () => {
-  //   const duration = audio.duration
-  //   console.log("Audio duration:", duration)
-  // })
 
   //Thumbnail
   const [preview, setPreview] = useState(
@@ -37,6 +32,9 @@ const TrackAccordion = ({
   const [thumbnail, setThumbnail] = useState<File | null>()
   const thumbnailRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+    console.log(thumbnail)
+  }, [thumbnail])
   const handleThumbnailOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newImage = e.target.files
     setThumbnail(newImage?.[0])
@@ -76,6 +74,30 @@ const TrackAccordion = ({
         const privacy = value === "true"
         setPrivacy(privacy)
         break
+    }
+  }
+  const handleUploadTrack = () => {
+    const audio = new Audio()
+    audio.src = URL.createObjectURL(file)
+    let duration = 0
+    audio.addEventListener("loadedmetadata", () => {
+      duration = audio.duration
+    })
+
+    try {
+      dispatch(
+        uploadTrack(
+          file,
+          title,
+          artist,
+          privacy,
+          duration,
+          thumbnail as File,
+          publicDate,
+        ),
+      )
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -166,9 +188,12 @@ const TrackAccordion = ({
             >
               Cancel
             </button>
-            <Primary onClick={() => {}}>
-              <div className="w-16 py-2">Save</div>
-            </Primary>
+            <button
+              className="w-16 py-2 bg-jarcata rounded-full text-xs font-bold text-linkwater"
+              onClick={handleUploadTrack}
+            >
+              Save
+            </button>
           </div>
         </div>
       )}
