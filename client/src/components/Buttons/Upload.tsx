@@ -18,8 +18,8 @@ const Upload = (props: Props) => {
         }}
       >
         <div className="flex items-center gap-1 px-2">
-          <span>Upload</span>
           <BsUpload size={12} />
+          <span>Upload</span>
         </div>
       </Primary>
       <UploadModals show={showed} onClose={handleOnClose} />

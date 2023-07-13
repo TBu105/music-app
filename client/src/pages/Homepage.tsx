@@ -16,7 +16,7 @@ const Homepage = () => {
   }, [])
 
   return (
-    <div className="mt-20 mx-9 text-linkwater">
+    <div className="pt-20 px-9 text-linkwater">
       {/* Actual content */}
       <div className="flex flex-col">
         <h2 className="text-3xl font-bold">New releases</h2>

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import Sidebar from "../components/Sidebar"
 import { Outlet, useNavigate } from "react-router-dom"
 import HistoryNavigation from "../components/Buttons/HistoryNavigation"
@@ -18,13 +18,26 @@ const MainLayout = () => {
     dispatch(logoutAsync())
     navigate("/")
   }
+  const [isBlurred, setIsBlurred] = useState(false)
+  const handleBlur = (e: React.SyntheticEvent) => {
+    const target = e.target as HTMLTextAreaElement
+    setIsBlurred(target.scrollTop > 0)
+  }
 
   return (
-    <div className="w-full h-screen bg-gradient-to-t from-neutral-950 from-70% to-martinique to-120% flex">
+    <div className="w-full h-screen flex bg-neutral-950">
       <Sidebar />
-      <main className="flex-grow text-linkwater overflow-y-scroll relative">
+      <main
+        className="flex-grow text-linkwater overflow-auto relative"
+        onScroll={handleBlur}
+      >
         <div className="sticky top-0 z-10">
-          <div className="absolute top-10 inset-x-10 flex justify-between">
+          <div
+            className={`absolute h-[88px] inset-x-0 transition-all duration-500 ${
+              isBlurred && "bg-neutral-950/90 backdrop-blur"
+            }`}
+          ></div>
+          <div className="absolute py-7 inset-x-0 px-10 flex justify-between">
             <HistoryNavigation />
             {isLoggedIn === "loading" && ""}
             {isLoggedIn === "false" && (
@@ -40,7 +53,7 @@ const MainLayout = () => {
             )}
           </div>
         </div>
-        <div className="h-[10000px]">
+        <div className="h-[5000px] scroll-smooth bg-gradient-to-t from-neutral-950 from-95% to-martinique to-100%">
           <Outlet />
         </div>
       </main>
