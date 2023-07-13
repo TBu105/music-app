@@ -3,14 +3,12 @@ import { useDropzone } from "react-dropzone"
 import { BsSoundwave } from "react-icons/bs"
 import TrackAccordion from "../Accordions/TrackAccordion"
 
-type Props = {}
-
-const UploadTab = (props: Props) => {
+const UploadTab = () => {
   const [uploadOption, setUploadOption] = useState("separates")
   const [privacyOption, setPrivacyOption] = useState(true)
   const [files, setFiles] = useState<File[]>([])
   const [active, setActive] = useState("")
-  const trackRef = useRef()
+
   const onDrop = useCallback((acceptedFiles: any) => {
     acceptedFiles.forEach((file: File) => {
       setFiles((oldFiles) => {
@@ -18,7 +16,10 @@ const UploadTab = (props: Props) => {
       })
     })
   }, [])
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "audio/*": [".mp3", ".flac", ".wav"] },
+  })
 
   useEffect(() => {
     console.log(files)

@@ -37,7 +37,7 @@ export const getNewUpload = (): AppThunk => async (dispatch) => {
         uploader: track.userId,
         audio: track.audio,
         lyrics: track.lyrics,
-        duration: 0,
+        duration: track.duration,
         privacy: track.isPublic,
         banned: track.isBanned,
         publicDate: track.publicDate,
@@ -63,33 +63,17 @@ export const uploadFile = async (file: File) => {
     throw Error(`Error: ${error.response.data.message}`)
   }
 }
-export const uploadTrack =
-  (
-    audioFile: File,
-    title: string,
-    artist: string,
-    privacy: boolean,
-    duration: number,
-    thumbnailFile: File,
-    releaseDate?: Date,
-  ): AppThunk =>
-  async (dispatch) => {
+export const uploadTrackAsync = createAsyncThunk(
+  "track/uploadTrackAsync",
+  async (track: any) => {
     try {
-      console.log(
-        audioFile,
-        title,
-        artist,
-        privacy,
-        duration,
-        releaseDate,
-        thumbnailFile,
-      )
-      const image = await uploadFile(thumbnailFile)
-      const audio = await uploadFile(audioFile)
+      const { title, artist, duration, privacy, publicDate } = track
+      const image = await uploadFile(track.thumbnail)
+      const audio = await uploadFile(track.audio)
       const response = await api.post("/track/create", {
         title,
         artist,
-        releaseDate,
+        publicDate,
         privacy,
         duration,
         image,
@@ -103,18 +87,17 @@ export const uploadTrack =
         uploader: trackData.userId,
         audio: trackData.audio,
         lyrics: trackData.lyrics,
-        duration: 0,
+        duration: trackData.duration,
         privacy: trackData.isPublic,
         banned: trackData.isBanned,
         publicDate: trackData.publicDate,
       }
-      dispatch(uploadNewTrackSuccess(transformedTrack))
-    } catch (error: any) {
-      console.log(error)
-      dispatch(uploadNewTrackFailed(error))
+      return transformedTrack
+    } catch (e: any) {
+      throw Error(`Error: ${e.response.data.error}`)
     }
-  }
-
+  },
+)
 const trackSlice = createSlice({
   name: "track",
   initialState,
@@ -129,23 +112,24 @@ const trackSlice = createSlice({
       state.loading = false
       state.error = action.payload
     },
-    uploadNewTrackSuccess: (state, action) => {
-      state.loading = false
-      state.newUpload.push(action.payload)
-    },
-    uploadNewTrackFailed: (state, action) => {
-      state.loading = false
-      state.error = action.payload
-    },
   },
-  extraReducers(builder) {},
+  extraReducers(builder) {
+    builder.addCase(uploadTrackAsync.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+    builder.addCase(uploadTrackAsync.fulfilled, (state, action) => {
+      state.loading = false
+      state.error = null
+      state.newUpload.push(action.payload)
+    })
+    builder.addCase(uploadTrackAsync.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string
+    })
+  },
 })
 
-export const {
-  getNewUploadSuccess,
-  getNewUploadFailed,
-  uploadNewTrackSuccess,
-  uploadNewTrackFailed,
-} = trackSlice.actions
+export const { getNewUploadSuccess, getNewUploadFailed } = trackSlice.actions
 
 export default trackSlice.reducer

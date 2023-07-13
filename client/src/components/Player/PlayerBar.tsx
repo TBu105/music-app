@@ -33,8 +33,7 @@ const PlayerBar = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    console.log(queue)
-    console.log(playerQueue)
+    localStorage.setItem("lastHeard", JSON.stringify(currentSong))
   }, [queue])
 
   const handlePlay = () => {

@@ -22,12 +22,12 @@ const TrackCard = ({ track }: Props) => {
           alt=""
           className="w-44 aspect-square object-fill rounded"
         />
-        <div
+        <button
           className="rounded-full w-12 aspect-square absolute -bottom-2 right-1 bg-jarcata-500 flex justify-center items-center opacity-0 group-hover:opacity-100 group-hover:bottom-1 transition-all duration-500"
           onClick={handlePlaySong}
         >
           <BsPlayFill size={28} />
-        </div>
+        </button>
       </div>
       <p className="mt-2 font-extrabold truncate">{track.title}</p>
       <span className="opacity-60 text-sm">{track.artist}</span>

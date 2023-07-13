@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from "react"
-import { BsDashLg, BsPencilFill, BsPlus } from "react-icons/bs"
+import React, { useRef, useState } from "react"
+import { BsCheck, BsDashLg, BsPencilFill, BsPlus } from "react-icons/bs"
+import { CgSpinner } from "react-icons/cg"
 import { useAppDispatch } from "../../app/hooks"
-import { uploadTrack } from "../../features/track/trackSlice"
+import { uploadTrackAsync } from "../../features/track/trackSlice"
 
 type Props = {
   file: File
@@ -22,7 +23,7 @@ const TrackAccordion = ({
   //Form
   const [title, setTitle] = useState("")
   const [artist, setArtist] = useState("")
-  const [publicDate, setPublicDate] = useState<Date>()
+  const [publicDate, setPublicDate] = useState("")
   const [privacy, setPrivacy] = useState(defaultPrivacy)
 
   //Thumbnail
@@ -32,9 +33,8 @@ const TrackAccordion = ({
   const [thumbnail, setThumbnail] = useState<File | null>()
   const thumbnailRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    console.log(thumbnail)
-  }, [thumbnail])
+  const [uploading, setUploading] = useState("incomplete")
+
   const handleThumbnailOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newImage = e.target.files
     setThumbnail(newImage?.[0])
@@ -67,8 +67,7 @@ const TrackAccordion = ({
         setArtist(value)
         break
       case "publicDate":
-        const date = new Date(value)
-        setPublicDate(date)
+        setPublicDate(value)
         break
       case "trackPrivacy":
         const privacy = value === "true"
@@ -76,26 +75,28 @@ const TrackAccordion = ({
         break
     }
   }
-  const handleUploadTrack = () => {
+  const handleUploadTrack = async () => {
     const audio = new Audio()
     audio.src = URL.createObjectURL(file)
     let duration = 0
     audio.addEventListener("loadedmetadata", () => {
       duration = audio.duration
     })
-
     try {
-      dispatch(
-        uploadTrack(
-          file,
-          title,
-          artist,
-          privacy,
-          duration,
-          thumbnail as File,
-          publicDate,
-        ),
+      setActive("")
+      setUploading("submitting")
+      await dispatch(
+        uploadTrackAsync({
+          title: title,
+          artist: artist,
+          publicDate: publicDate,
+          duration: duration,
+          privacy: privacy,
+          thumbnail: thumbnail as File,
+          audio: file,
+        }),
       )
+      setUploading("completed")
     } catch (error) {
       console.log(error)
     }
@@ -110,16 +111,38 @@ const TrackAccordion = ({
         onChange={handleThumbnailOnChange}
         className="hidden"
       />
+      {/* Accordion wrapper */}
       <div className="bg-neutral-800 flex justify-between p-4 rounded-lg drop-shadow-lg">
         <span className="underline decoration-jarcata decoration-2 underline-offset-4">
           {file.name}
         </span>
-        <button onClick={() => setActive(file.name)}>
-          {active == file.name ? <BsDashLg size={24} /> : <BsPlus size={24} />}
-        </button>
+        {/* Uploading state */}
+        {uploading === "incomplete" && (
+          <button onClick={() => setActive(file.name)}>
+            {active == file.name ? (
+              <BsDashLg size={24} />
+            ) : (
+              <BsPlus size={24} />
+            )}
+          </button>
+        )}
+        {uploading === "submitting" && (
+          <div className="animate-spin text-jarcata-200">
+            <CgSpinner size={24} />
+          </div>
+        )}
+        {uploading === "completed" && (
+          <div className="flex">
+            <span className="text-green-500">
+              <BsCheck size={24} />
+            </span>
+            Upload success!
+          </div>
+        )}
       </div>
       {active == file.name && (
         <div className="p-4 flex relative">
+          {/* Changing thumbnail */}
           <div className="relative group w-48">
             <img
               src={preview}
@@ -141,6 +164,7 @@ const TrackAccordion = ({
                 type="text"
                 name="trackArtist"
                 className="p-2 bg-white/5 rounded focus:outline-0"
+                value={artist}
                 onChange={handleChangeTrackForm}
                 placeholder="Enter artist name"
               />
@@ -151,6 +175,7 @@ const TrackAccordion = ({
                 type="text"
                 name="trackTitle"
                 className="p-2 bg-white/5 rounded focus:outline-0"
+                value={title}
                 onChange={handleChangeTrackForm}
                 placeholder="Enter track title"
               />
@@ -161,6 +186,7 @@ const TrackAccordion = ({
                 type="text"
                 name="publicDate"
                 className="p-2 bg-white/5 rounded focus:outline-0"
+                value={publicDate}
                 onChange={handleChangeTrackForm}
                 placeholder="MM-DD-YYYY"
               />
@@ -171,6 +197,7 @@ const TrackAccordion = ({
                 defaultValue={privacy.toString()}
                 name="trackPrivacy"
                 className="p-2 appearance-none bg-[#323235] rounded focus:outline-0"
+                value={privacy.toString()}
                 onChange={handleChangeTrackForm}
               >
                 <option value={"true"}>Yes</option>
