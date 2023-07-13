@@ -3,33 +3,10 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const path = require("path");
 
-const admin = require("firebase-admin");
-const serviceAccount = require("../serviceAccountKey.json");
-// Initialize Firebase Admin SDK
-if (admin.apps.length === 0) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: "gs://music-app-peace.appspot.com/",
-  });
-}
-
 const uploadFileToCloudinary = async (file) => {
   const fileUpload = await cloudinary.uploader.upload(
     file,
     { resource_type: "auto" },
-    (error, result) => {
-      if (error) {
-        return res.status(500).json({ error });
-      }
-      return result;
-    }
-  );
-  return fileUpload;
-};
-const uploadTextToCloudinary = async (file) => {
-  const fileUpload = await cloudinary.uploader.upload(
-    file,
-    { resource_type: "raw" },
     (error, result) => {
       if (error) {
         return res.status(500).json({ error });
@@ -77,31 +54,6 @@ const uploadFile = async (req, res) => {
     .json({ message: "File uploaded successfully", fileURL: cloudFile.url });
 };
 
-const uploadTextToFireBase = async (req, res) => {
-  if (!req.files) throw Error("No file uploaded");
-
-  const { text } = req.files;
-
-  // Upload the text file to Firebase Storage
-  const bucket = admin.storage().bucket();
-  const fileUploadResult = await bucket.upload(text.tempFilePath, (err) => {
-    if (err) {
-      console.error("Error uploading file:", err);
-      return res.status(500).send("Failed to upload the file.");
-    }
-  });
-
-  console.log(fileUploadResult);
-
-  // Get the public URL of the uploaded file
-  const publicUrl = fileUploadResult[0].metadata.mediaLink;
-
-  res
-    .status(201)
-    .json({ message: "File uploaded successfully", fileURL: publicUrl });
-};
-
 module.exports = {
   uploadFile,
-  uploadTextToFireBase,
 };
