@@ -31,29 +31,38 @@ const deleteFileInTMPFolder = (cloudFile) => {
     console.log("File deleted successfully");
   });
 };
-const uploadFile = async (req, res) => {
+const uploadFile = async (req, res, next) => {
   if (!req.files) return res.status(500).json({ error: "No file uploaded" });
 
   const { file } = req.files;
 
-  console.log(file);
+  // console.log(file);
 
-  //upload ảnh lên cloudinary, nhận về một object gồm các thông tin liên quan đến ảnh đó
+  //upload ản lên cloudinary, nhận về một object gồm các thông tin liên quan đến ảnh đó
   const cloudFile = await uploadFileToCloudinary(file.tempFilePath);
 
-  // if (cloudFile.hasOwnProperty("duration")) {
-  //   getCloudFile(cloudFile);
-  // }
-
-  console.log(cloudFile);
+  // console.log(cloudFile);
+  req.cloudFile = cloudFile;
 
   deleteFileInTMPFolder(cloudFile);
 
-  res
-    .status(201)
-    .json({ message: "File uploaded successfully", fileURL: cloudFile.url });
+  next();
+};
+const conditionallyUploadFile = async (req, res, next) => {
+  if (!req.files) {
+    return next();
+  }
+  if (
+    req.files.file.mimetype === "image/jpeg" ||
+    req.files.file.mimetype === "image/png"
+  ) {
+    uploadFile(req, res, next);
+  } else {
+    return res.status(500).json({ message: "File upload need to be image" });
+  }
 };
 
 module.exports = {
   uploadFile,
+  conditionallyUploadFile,
 };

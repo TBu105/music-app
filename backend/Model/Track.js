@@ -5,7 +5,7 @@ const TrackSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      require: [true, "Song must have user id"],
+      require: [true, "Son'g must have user id"],
     },
     artist: {
       type: String,
@@ -30,8 +30,8 @@ const TrackSchema = new mongoose.Schema(
     },
     lyrics: {
       type: String,
-      require: [true, "Your song must have lyrics"],
       minlength: [1, "Your song must have more than 1 character"],
+      default: "Lyrics is not available",
     },
     publicDate: {
       type: Date,

@@ -43,6 +43,10 @@ const updateUserById = async (req, res) => {
     checkAdminRightPermission(req.user);
   }
 
+  if (req.cloudFile) {
+    req.body.image = req.cloudFile.url;
+  }
+
   //tim kiem thong id user, va thay doi thong tin theo req.body
   const user = await User.findOneAndUpdate({ _id: id }, req.body, {
     new: true,

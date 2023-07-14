@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { conditionallyUploadFile } = require("../Middleware/uploadFile");
 
 const {
   getUserById,
@@ -21,7 +22,7 @@ router.route("/password").patch(authenticateUser, updateUserPassword);
 router
   .route("/:id")
   .get(getUserById)
-  .patch(authenticateUser, updateUserById)
+  .patch(authenticateUser, conditionallyUploadFile, updateUserById)
   .delete(authenticateUser, deleteUserById);
 
 module.exports = router;

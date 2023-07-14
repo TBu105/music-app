@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { authenticateUser } = require("../Middleware/authentication");
+const { conditionallyUploadFile } = require("../Middleware/uploadFile");
 
 const {
   createPlaylist,
@@ -19,7 +20,7 @@ router.route("/create").post(authenticateUser, createPlaylist);
 router
   .route("/:id")
   .get(authenticateUser, getPlaylistById)
-  .patch(authenticateUser, updatePlaylistById)
+  .patch(authenticateUser, conditionallyUploadFile, updatePlaylistById)
   .delete(authenticateUser, deletePlaylistById);
 
 router

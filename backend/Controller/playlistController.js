@@ -22,7 +22,13 @@ const getPlaylistById = async (req, res) => {
 };
 const updatePlaylistById = async (req, res) => {
   const filterObj = {};
-  if (req.body.image) {
+
+  const checkPlaylist = await Playlist.findById({ _id: req.params.id });
+
+  checkPermissonToChangeInfo(req.user, checkPlaylist.userId);
+
+  if (req.cloudFile) {
+    req.body.image = req.cloudFile.url;
     filterObj.image = req.body.image;
   }
   if (req.body.title) {

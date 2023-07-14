@@ -16,7 +16,6 @@ const connectDB = require("./Database/db");
 // route
 const userRouter = require("./Route/userRoute");
 const authRouter = require("./Route/authRoute");
-const fileuploadRouter = require("./Route/fileuploadRoute");
 const trackRouter = require("./Route/trackRoute");
 const historyRouter = require("./Route/historyRoute");
 const playlistRouter = require("./Route/playlistRoute");
@@ -32,7 +31,6 @@ app.use(
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/fileupload", fileuploadRouter);
 app.use("/api/v1/track", trackRouter);
 app.use("/api/v1/history", historyRouter);
 app.use("/api/v1/playlist", playlistRouter);
