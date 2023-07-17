@@ -16,6 +16,7 @@ export interface CurrentUser {
   role: string
 }
 export interface Track {
+  id: string
   title: string
   artist: string
   thumbnail: string

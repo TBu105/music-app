@@ -33,8 +33,8 @@ const ProfileBanner = () => {
 
   const setProfileBackgroundColor = (image: string) => {
     getColor(image).then((color) => {
-      const result = rgbToHex(color as number[])
-      setBgColor(result)
+      const result = color as number[]
+      setBgColor(`${result[0]},${result[1]},${result[2]}`)
     })
   }
 
@@ -111,9 +111,10 @@ const ProfileBanner = () => {
         {!loading && (
           <div
             style={{
-              background: `linear-gradient(to bottom, ${bgColor}, transparent`,
+              backgroundColor: `rgba(${bgColor},0.4)`,
+              boxShadow: `0 120px 120px 20px rgba(${bgColor},0.2)`,
             }}
-            className="h-88 shadow-2xl shadow-neutral-500/8 relative px-9"
+            className="h-88 relative px-9"
           >
             <div className="absolute flex bottom-9 items-center gap-4">
               <div

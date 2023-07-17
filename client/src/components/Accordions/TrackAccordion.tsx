@@ -25,6 +25,13 @@ const TrackAccordion = ({
   const [artist, setArtist] = useState("")
   const [publicDate, setPublicDate] = useState("")
   const [privacy, setPrivacy] = useState(defaultPrivacy)
+  const audio = new Audio()
+  audio.src = URL.createObjectURL(file)
+  let duration: number
+  audio.addEventListener("loadedmetadata", () => {
+    duration = audio.duration
+    console.log(duration)
+  })
 
   //Thumbnail
   const [preview, setPreview] = useState(
@@ -75,13 +82,11 @@ const TrackAccordion = ({
         break
     }
   }
+  const handleToggleAccordion = () => {
+    if (file.name == active) setActive("")
+    else setActive(file.name)
+  }
   const handleUploadTrack = async () => {
-    const audio = new Audio()
-    audio.src = URL.createObjectURL(file)
-    let duration = 0
-    audio.addEventListener("loadedmetadata", () => {
-      duration = audio.duration
-    })
     try {
       setActive("")
       setUploading("submitting")
@@ -118,7 +123,7 @@ const TrackAccordion = ({
         </span>
         {/* Uploading state */}
         {uploading === "incomplete" && (
-          <button onClick={() => setActive(file.name)}>
+          <button onClick={handleToggleAccordion}>
             {active == file.name ? (
               <BsDashLg size={24} />
             ) : (

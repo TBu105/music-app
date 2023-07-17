@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { Track } from "../../app/types"
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { AppThunk } from "../../app/store"
+import { uploadFile } from "../../utils/uploadfile"
 
 const api = axios.create({
   baseURL: "/api/v1",
@@ -24,6 +25,33 @@ const initialState: TrackState = {
   loading: true,
   error: null,
 }
+
+export const fetchTrackById = createAsyncThunk(
+  "track/fetchTrackAsync",
+  async (id: string) => {
+    try {
+      const response = await api.get(`/track/${id}`)
+      const trackData = response.data.track[0]
+      var transformedTrack: Track = {
+        id: trackData._id,
+        title: trackData.title,
+        artist: trackData.artist,
+        thumbnail: trackData.image,
+        uploader: trackData.userId,
+        audio: trackData.audio,
+        lyrics: trackData.lyrics,
+        duration: trackData.duration,
+        privacy: trackData.isPublic,
+        banned: trackData.isBanned,
+        publicDate: trackData.publicDate,
+      }
+      return transformedTrack
+    } catch (error: any) {
+      throw Error(`Error: ${error.response.data.error}`)
+    }
+  },
+)
+
 export const getNewUpload = (): AppThunk => async (dispatch) => {
   try {
     const response = await api.get("/track")
@@ -31,6 +59,7 @@ export const getNewUpload = (): AppThunk => async (dispatch) => {
     const transformedData: Track[] = []
     data.forEach((track: any) => {
       var transformedTrack: Track = {
+        id: track._id,
         title: track.title,
         artist: track.artist,
         thumbnail: track.image,
@@ -47,20 +76,6 @@ export const getNewUpload = (): AppThunk => async (dispatch) => {
     dispatch(getNewUploadSuccess(transformedData))
   } catch (e: any) {
     dispatch(getNewUploadFailed(e.message || "An error occured!"))
-  }
-}
-export const uploadFile = async (file: File) => {
-  try {
-    const formData = new FormData()
-    formData.append("file", file)
-    const response = await api.post("/fileupload/file", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-    return response.data.fileURL
-  } catch (error: any) {
-    throw Error(`Error: ${error.response.data.message}`)
   }
 }
 export const uploadTrackAsync = createAsyncThunk(
@@ -81,6 +96,7 @@ export const uploadTrackAsync = createAsyncThunk(
       })
       const trackData = response.data.track
       var transformedTrack: Track = {
+        id: trackData._id,
         title: trackData.title,
         artist: trackData.artist,
         thumbnail: trackData.image,
@@ -124,6 +140,19 @@ const trackSlice = createSlice({
       state.newUpload.push(action.payload)
     })
     builder.addCase(uploadTrackAsync.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string
+    })
+    builder.addCase(fetchTrackById.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+    builder.addCase(fetchTrackById.fulfilled, (state, action) => {
+      state.loading = false
+      state.error = null
+      state.viewedTrack = action.payload
+    })
+    builder.addCase(fetchTrackById.rejected, (state, action) => {
       state.loading = false
       state.error = action.payload as string
     })

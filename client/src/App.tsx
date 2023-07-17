@@ -16,6 +16,7 @@ import ProfilePage from "./pages/ProfilePage"
 import AccountOverview from "./pages/AccountOverview"
 import EditProfile from "./pages/EditProfile"
 import ChangePassword from "./pages/ChangePassword"
+import TrackPage from "./pages/TrackPage"
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -33,6 +34,7 @@ const App = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Homepage />} />
           <Route path="/user/:id" element={<ProfilePage />} />
+          <Route path="/track/:id" element={<TrackPage />} />
         </Route>
         <Route path="/account" element={<UserLayout />}>
           <Route path="login" element={<Login />} />

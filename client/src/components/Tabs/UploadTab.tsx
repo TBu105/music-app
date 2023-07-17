@@ -98,17 +98,19 @@ const UploadTab = () => {
               <span>Private</span>
             </div>
           </div>
-          <div className="flex w-full py-56 bg-neutral-800 rounded items-center justify-center">
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              {isDragActive ? (
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            {isDragActive ? (
+              <div className="flex w-full py-56 bg-neutral-800 rounded items-center justify-center">
                 <div className="flex flex-col items-center text-neutral-700">
                   <BsSoundwave size={96} />
                   <p className="text-linkwater text-xl font-bold">
                     Drop thems here
                   </p>
                 </div>
-              ) : (
+              </div>
+            ) : (
+              <div className="flex w-full py-56 bg-neutral-800 rounded items-center justify-center">
                 <div className="flex flex-col items-center text-neutral-700">
                   <BsSoundwave size={96} />
                   <p className="text-linkwater text-xl font-bold">
@@ -118,8 +120,8 @@ const UploadTab = () => {
                     or click here to choose files
                   </p>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </>
       )}

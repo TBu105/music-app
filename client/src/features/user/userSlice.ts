@@ -1,8 +1,8 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { User } from "../../app/types"
 import axios from "axios"
-import { createDispatchHook } from "react-redux"
 import { AppThunk } from "../../app/store"
+import { uploadFile } from "../../utils/uploadfile"
 
 interface UserState {
   userData: User | null
@@ -50,14 +50,7 @@ export const uploadAvatar = createAsyncThunk(
   "user/updateAvatar",
   async (image: File) => {
     try {
-      const formData = new FormData()
-      formData.append("file", image)
-
-      const response = await api.post("/fileupload/file", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      const response = await uploadFile(image)
       return response.data.fileURL
     } catch (error: any) {
       throw Error(`Error: ${error.response.data.message}`)

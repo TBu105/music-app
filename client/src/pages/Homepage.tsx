@@ -25,7 +25,7 @@ const Homepage = () => {
             <TrackCardSkeleton itemCount={7} />
           ) : (
             <>
-              {sortedNewSong.map((track: Track, index) => (
+              {sortedNewSong.slice(0, 7).map((track: Track, index) => (
                 <TrackCard track={track} key={index} />
               ))}
             </>

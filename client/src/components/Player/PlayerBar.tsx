@@ -33,7 +33,11 @@ const PlayerBar = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    localStorage.setItem("lastHeard", JSON.stringify(currentSong))
+    console.log(playerQueue)
+    localStorage.setItem(
+      "lastHeard",
+      JSON.stringify(currentSong ? [currentSong] : []),
+    )
   }, [queue])
 
   const handlePlay = () => {
@@ -102,7 +106,7 @@ const PlayerBar = () => {
           thumbnail={currentSong.thumbnail}
         />
       ) : (
-        <div className="w-64"></div>
+        <div className="w-1/3"></div>
       )}
       <TrackControls
         playerRef={playerRef}

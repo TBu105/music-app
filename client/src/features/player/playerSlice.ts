@@ -20,7 +20,7 @@ interface PlayerState {
 const lastHeard = localStorage.getItem("lastHeard")
 
 const initialState: PlayerState = {
-  currentSong: lastHeard ? JSON.parse(lastHeard) : null,
+  currentSong: lastHeard ? JSON.parse(lastHeard)[0] : null,
   progress: 0,
   duration: 0,
   playing: false,
@@ -29,7 +29,7 @@ const initialState: PlayerState = {
   shuffle: false,
   loopTrack: false,
   loopPlaylist: false,
-  playerQueue: lastHeard ? [JSON.parse(lastHeard)] : [],
+  playerQueue: lastHeard ? JSON.parse(lastHeard) : [],
   queue: 0,
   error: null,
 }
@@ -62,7 +62,8 @@ const playerSlice = createSlice({
       state.loopPlaylist = false
     },
     addToQueue: (state, action: PayloadAction<Track>) => {
-      state.playerQueue.push(action.payload)
+      if (state.currentSong?.id != action.payload.id)
+        state.playerQueue.push(action.payload)
     },
     playNewSong: (state) => {
       state.currentSong = state.playerQueue.at(-1) as Track
