@@ -9,8 +9,13 @@ const Homepage = () => {
   const dispatch = useAppDispatch()
   const newSong = useAppSelector((state) => state.track.newUpload)
   const loading = useAppSelector((state) => state.track.loading)
-  const sortedNewSong = Object.values(newSong).reverse()
-
+  const currentUser = useAppSelector((state) => state.auth.currentUser)
+  const sortedNewSong = newSong
+    .filter((track) => {
+      if (currentUser?.id == track.uploader) return track
+      else return track.privacy == true
+    })
+    .reverse()
   useEffect(() => {
     dispatch(getNewUpload())
   }, [])
@@ -20,7 +25,7 @@ const Homepage = () => {
       {/* Actual content */}
       <div className="flex flex-col">
         <h2 className="text-3xl font-bold">New releases</h2>
-        <div className="grid grid-cols-7 my-4 gap-4">
+        <div className="grid 2xl:grid-cols-7 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 my-4 gap-2">
           {loading ? (
             <TrackCardSkeleton itemCount={7} />
           ) : (

@@ -10,11 +10,11 @@ const TrackDetail = ({ title, artist, thumbnail }: Props) => {
       <img
         src={thumbnail}
         alt="thumbnail"
-        className="rounded-lg object-cover w-[72px] aspect-square"
+        className="rounded-lg object-cover w-[72px] h-[72px]"
       />
-      <div>
-        <h3 className="text-lg font-bold">{title}</h3>
-        <span className="text-sm text-neutral-500">{artist}</span>
+      <div className="overflow-hidden">
+        <h3 className="text-lg font-bold truncate">{title}</h3>
+        <p className="text-sm text-neutral-500 truncate">{artist}</p>
       </div>
     </div>
   )

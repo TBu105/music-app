@@ -9,12 +9,9 @@ export interface User {
   follower: number
   image: string
 }
-export interface CurrentUser {
-  email: string
-  id: string
-  image: string
-  role: string
-}
+
+export type CurrentUser = Pick<User, "id" | "email" | "image" | "role">
+
 export interface Track {
   id: string
   title: string
@@ -23,7 +20,7 @@ export interface Track {
   uploader: string
   audio: string
   lyrics: string
-  publicDate?: Date
+  publicDate: Date
   duration: number
   privacy: boolean
   banned: boolean

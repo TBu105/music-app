@@ -30,7 +30,6 @@ const TrackAccordion = ({
   let duration: number
   audio.addEventListener("loadedmetadata", () => {
     duration = audio.duration
-    console.log(duration)
   })
 
   //Thumbnail
@@ -96,7 +95,7 @@ const TrackAccordion = ({
           artist: artist,
           publicDate: publicDate,
           duration: duration,
-          privacy: privacy,
+          isPublic: privacy,
           thumbnail: thumbnail as File,
           audio: file,
         }),

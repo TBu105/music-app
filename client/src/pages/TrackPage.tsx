@@ -84,9 +84,9 @@ const TrackPage = () => {
             </div>
           </div>
         </div>
-        <div className="mx-9 flex items-center gap-8">
+        <div className="mx-9 my-4 flex items-center gap-8">
           <button
-            className="rounded-full w-16 h-16 bg-jarcata-500 flex justify-center items-center  my-4 hover:brightness-105"
+            className="rounded-full w-16 h-16 bg-jarcata-500 flex justify-center items-center hover:brightness-105"
             onClick={handlePlaySong}
           >
             {player.playing && track?.id == player.currentSong?.id ? (
