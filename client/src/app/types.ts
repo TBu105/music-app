@@ -25,3 +25,13 @@ export interface Track {
   privacy: boolean
   banned: boolean
 }
+
+export type TrackID = Pick<Track, "id">
+
+export interface Playlist {
+  id: string
+  title: string
+  creator: string
+  tracks: TrackID[]
+  thumbnail: string
+}

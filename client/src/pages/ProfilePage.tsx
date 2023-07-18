@@ -9,10 +9,11 @@ import { getUserUpload } from "../features/track/trackSlice"
 const ProfilePage = () => {
   const { id } = useParams()
   const dispatch = useAppDispatch()
+  const currentUser = useAppSelector((state) => state.auth.currentUser)
   const userUploads = useAppSelector((state) => state.track.trackByUser)
   useEffect(() => {
     dispatch(getUserUpload(id as string))
-  }, [])
+  }, [id])
 
   return (
     <>
@@ -22,13 +23,15 @@ const ProfilePage = () => {
           <BsThreeDots size={32} />
         </button>
         <div className="my-2 flex flex-col gap-2">
-          <h3 className="text-2xl font-semibold">Your uploads</h3>
+          <h3 className="text-2xl font-semibold">
+            {currentUser?.id == id ? "Your uploads" : "Their uploads"}
+          </h3>
           <div className="grid grid-cols-7 gap-2">
             {userUploads
               .slice(0, 7)
               .reverse()
-              .map((track) => (
-                <TrackCard track={track} />
+              .map((track, index) => (
+                <TrackCard key={index} track={track} />
               ))}
           </div>
         </div>

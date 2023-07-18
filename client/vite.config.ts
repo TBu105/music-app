@@ -7,6 +7,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/v1": "http://localhost:3000",
+      "/proxy": {
+        target: "https://api.musixmatch.com/ws/1.1",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/proxy/, ""),
+      },
     },
   },
   build: {

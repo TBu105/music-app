@@ -84,23 +84,33 @@ const TrackPage = () => {
             </div>
           </div>
         </div>
-        <div className="mx-9 my-4 flex items-center gap-8">
-          <button
-            className="rounded-full w-16 h-16 bg-jarcata-500 flex justify-center items-center hover:brightness-105"
-            onClick={handlePlaySong}
-          >
-            {player.playing && track?.id == player.currentSong?.id ? (
-              <BsPauseFill size={42} />
-            ) : (
-              <BsPlayFill size={42} />
-            )}
-          </button>
-          <button>
-            <BsHeart size={32} />
-          </button>
-          <button>
-            <BsThreeDots size={32} />
-          </button>
+        <div className="mx-9 my-4">
+          <div className="flex items-center gap-8">
+            <button
+              className="rounded-full w-16 h-16 bg-jarcata-500 flex justify-center items-center hover:brightness-105"
+              onClick={handlePlaySong}
+            >
+              {player.playing && track?.id == player.currentSong?.id ? (
+                <BsPauseFill size={42} />
+              ) : (
+                <BsPlayFill size={42} />
+              )}
+            </button>
+            <button>
+              <BsHeart size={32} />
+            </button>
+            <button>
+              <BsThreeDots size={32} />
+            </button>
+          </div>
+          <h2 className="font-bold text-2xl my-4">Lyrics</h2>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: track?.lyrics?.replace(/\n/g, "<br/>") as string,
+            }}
+            className="text-linkwater/50"
+          ></div>
+          quite obvious since this shit ain't free
         </div>
       </div>
     )

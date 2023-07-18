@@ -3,9 +3,16 @@ import { Track } from "../../app/types"
 import axios from "axios"
 import { AppThunk } from "../../app/store"
 import { uploadFile } from "../../utils/uploadfile"
+import { getLyrics, searchTracks } from "../../utils/musixmatchAPI"
 
 const api = axios.create({
   baseURL: "/api/v1",
+})
+
+const getSongAPI = axios.create({
+  baseURL: `https://api.musixmatch.com/ws/1.1/track.search?apikey=${
+    import.meta.env.VITE_MUSIXMATCH_API_KEY
+  }`,
 })
 
 interface TrackState {
@@ -32,6 +39,15 @@ export const fetchTrackById = createAsyncThunk(
     try {
       const response = await api.get(`/track/${id}`)
       const trackData = response.data.track[0]
+
+      const trackFromThirdPartyAPI = await searchTracks(
+        trackData.title,
+        trackData.artist,
+      )
+      console.log(trackFromThirdPartyAPI)
+      const lyrics = await getLyrics(trackFromThirdPartyAPI)
+      console.log(lyrics)
+
       var transformedTrack: Track = {
         id: trackData._id,
         title: trackData.title,
@@ -39,7 +55,7 @@ export const fetchTrackById = createAsyncThunk(
         thumbnail: trackData.image,
         uploader: trackData.userId,
         audio: trackData.audio,
-        lyrics: trackData.lyrics,
+        lyrics: lyrics,
         duration: trackData.duration,
         privacy: trackData.isPublic,
         banned: trackData.isBanned,

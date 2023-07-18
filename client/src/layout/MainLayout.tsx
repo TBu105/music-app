@@ -25,10 +25,9 @@ const MainLayout = () => {
   }
 
   return (
-    <div className="w-full h-screen flex bg-neutral-950">
-      <Sidebar />
+    <div className="w-full h-screen flex flex-row-reverse bg-neutral-950">
       <main
-        className="flex-grow text-linkwater overflow-auto relative"
+        className="flex-grow text-linkwater overflow-auto"
         onScroll={handleBlur}
       >
         <div className="sticky top-0 z-10">
@@ -57,6 +56,7 @@ const MainLayout = () => {
           <Outlet />
         </div>
       </main>
+      <Sidebar />
       <PlayerBar />
     </div>
   )

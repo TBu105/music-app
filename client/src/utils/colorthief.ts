@@ -11,7 +11,8 @@ export const getColor = (url: string) => {
 
     image.onload = function () {
       const colorThief = new ColorThief()
-      const result = colorThief.getColor(image, 10)
+      const result = colorThief.getColor(image, 200)
+      console.log(result)
       resolve(result)
     }
   })
