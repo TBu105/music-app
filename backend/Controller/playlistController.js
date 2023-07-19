@@ -22,6 +22,11 @@ const getPlaylistById = async (req, res) => {
 };
 const updatePlaylistById = async (req, res) => {
   const filterObj = {};
+
+  const checkPlaylist = await Playlist.findById({ _id: req.params.id });
+
+  checkPermissonToChangeInfo(req.user, checkPlaylist.userId);
+
   if (req.body.image) {
     filterObj.image = req.body.image;
   }

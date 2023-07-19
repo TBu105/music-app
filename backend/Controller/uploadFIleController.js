@@ -36,16 +36,8 @@ const uploadFile = async (req, res) => {
 
   const { file } = req.files;
 
-  console.log(file);
-
   //upload ảnh lên cloudinary, nhận về một object gồm các thông tin liên quan đến ảnh đó
   const cloudFile = await uploadFileToCloudinary(file.tempFilePath);
-
-  // if (cloudFile.hasOwnProperty("duration")) {
-  //   getCloudFile(cloudFile);
-  // }
-
-  console.log(cloudFile);
 
   deleteFileInTMPFolder(cloudFile);
 
