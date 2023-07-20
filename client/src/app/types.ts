@@ -26,12 +26,15 @@ export interface Track {
   banned: boolean
 }
 
-export type TrackID = Pick<Track, "id">
-
 export interface Playlist {
   id: string
   title: string
   creator: string
-  tracks: TrackID[]
   thumbnail: string
+}
+export interface IncompletePlaylist extends Playlist {
+  tracks: number
+}
+export interface FullPlaylist extends Playlist {
+  trackList: Track[]
 }

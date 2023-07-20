@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { BsSoundwave } from "react-icons/bs"
-import TrackAccordion from "../Accordions/TrackAccordion"
+import TrackAccordion from "../Track/TrackAccordion"
 
 const UploadTab = () => {
   const [uploadOption, setUploadOption] = useState("separates")

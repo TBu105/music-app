@@ -3,7 +3,7 @@ import BrandLogo from "../assets/brand.svg"
 import { BsFiles, BsFillHouseDoorFill, BsPlus, BsSearch } from "react-icons/bs"
 import { Link } from "react-router-dom"
 import PlaylistList from "./Playlist/PlaylistList"
-import NewPlaylistModal from "./Playlist/NewPlaylistModal"
+import PlaylistDropdown from "./Playlist/PlaylistDropdown"
 
 const Sidebar = () => {
   return (
@@ -20,11 +20,11 @@ const Sidebar = () => {
           <BsSearch size={32} />
           <Link to="/">Search</Link>
         </div>
-        <div className="w-full h-0.5 bg-linkwater/10 rounded-lg"></div>
+        <div className="w-full h-0.5 bg-white/10 rounded-lg"></div>
         <div className="w-full flex items-center justify-auto gap-4 relative">
           <BsFiles size={32} />
-          <Link to="/">Your Library</Link>
-          <NewPlaylistModal />
+          Your Library
+          <PlaylistDropdown />
         </div>
         <PlaylistList />
       </div>

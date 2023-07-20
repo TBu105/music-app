@@ -3,7 +3,7 @@ import { BsCollection, BsPlus } from "react-icons/bs"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { createNewPlaylist } from "../../features/playlist/playlistSlice"
 
-const NewPlaylistModal = () => {
+const PlaylistDropdown = () => {
   const [toggleModal, setToggleModal] = useState(false)
   const dialogRef: React.RefObject<HTMLDivElement> = useRef(null)
   const dispatch = useAppDispatch()
@@ -65,4 +65,4 @@ const NewPlaylistModal = () => {
   )
 }
 
-export default NewPlaylistModal
+export default PlaylistDropdown

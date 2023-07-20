@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { Track } from "../app/types"
-import TrackCard from "../components/Card/TrackCard"
+import TrackCard from "../components/Track/TrackCard"
 import TrackCardSkeleton from "../components/Skeletons/TrackCardSkeleton"
 import { getNewUpload } from "../features/track/trackSlice"
 

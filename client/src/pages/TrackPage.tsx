@@ -10,6 +10,8 @@ import {
 } from "../features/player/playerSlice"
 import { Track } from "../app/types"
 import { BsHeart, BsPauseFill, BsPlayFill, BsThreeDots } from "react-icons/bs"
+import { duration } from "../utils/utils"
+import TrackDropdown from "../components/Track/TrackDropdown"
 
 const TrackPage = () => {
   const { id } = useParams()
@@ -30,14 +32,10 @@ const TrackPage = () => {
 
   const publicDate = new Date(track?.publicDate as Date)
   const year = publicDate.getFullYear()
-  const duration = () => {
-    const trackDuration = Math.round(track?.duration as number)
-    var minutes = Math.floor(trackDuration / 60)
-    var seconds = trackDuration % 60
-    return `${minutes}:${seconds}`
-  }
 
   useEffect(() => {
+    const isSameTrack = track?.id == id
+    if (isSameTrack) return
     dispatch(fetchTrackById(id as string))
       .unwrap()
       .then((track) => {
@@ -54,7 +52,7 @@ const TrackPage = () => {
     }
   }
 
-  if (!loading)
+  if (!loading && track)
     return (
       <div className="w-full text-linkwater">
         <div
@@ -67,7 +65,7 @@ const TrackPage = () => {
           <div className="absolute flex bottom-9 items-end gap-4">
             <div className="relative">
               <img
-                src={track?.thumbnail}
+                src={track.thumbnail}
                 alt="avatar"
                 className="w-60 h-60 object-cover shadow-lg shadow-black/50"
               />
@@ -76,9 +74,9 @@ const TrackPage = () => {
               <p className="text-sm">Song</p>
               <h1 className="text-6xl">{track?.title}</h1>
               <p className="text-sm mt-10">
-                {track?.artist} &#8226;{" "}
+                {track.artist} &#8226;{" "}
                 <span className="font-normal">
-                  {track?.title} &#8226; {year} &#8226; {duration()}
+                  {track.title} &#8226; {year} &#8226; {duration(track)}
                 </span>
               </p>
             </div>
@@ -99,9 +97,7 @@ const TrackPage = () => {
             <button>
               <BsHeart size={32} />
             </button>
-            <button>
-              <BsThreeDots size={32} />
-            </button>
+            <TrackDropdown track={track} />
           </div>
           <h2 className="font-bold text-2xl my-4">Lyrics</h2>
           <div

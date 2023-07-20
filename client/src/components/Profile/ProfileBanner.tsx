@@ -39,6 +39,11 @@ const ProfileBanner = () => {
   }
 
   useEffect(() => {
+    const isSameUser = user?.id == id
+    if (isSameUser) {
+      setProfileBackgroundColor(user?.image as string)
+      return
+    }
     dispatch(fetchUserById(id as string))
       .unwrap()
       .then((user) => {

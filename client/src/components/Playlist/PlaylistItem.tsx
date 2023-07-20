@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from "react"
 import { Playlist } from "../../app/types"
-import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 type Props = {
   playlist: Playlist
 }
 
 const PlaylistItem = ({ playlist }: Props) => {
-  const [creator, setCreator] = useState("")
-
-  useEffect(() => {
-    if (!playlist.creator) return
-
-    axios.get(`/api/v1/user/${playlist.creator}`).then((response) => {
-      const creatorName = response.data.user.username
-      setCreator(creatorName)
-    })
-  }, [])
+  const navigate = useNavigate()
 
   return (
-    <div className="flex h-16 p-1 gap-2">
+    <div
+      className="flex h-16 p-1 gap-2 cursor-pointer"
+      onClick={() => navigate(`playlist/${playlist.id}`)}
+    >
       <img
         src={playlist.thumbnail}
         alt={playlist.title}
@@ -28,7 +22,7 @@ const PlaylistItem = ({ playlist }: Props) => {
       <div className="flex flex-col">
         <span className="font-medium text-base">{playlist.title}</span>
         <span className="font-normal text-sm text-linkwater/50">
-          Playlist &#8226; {creator}
+          Playlist &#8226; {playlist.creator}
         </span>
       </div>
     </div>

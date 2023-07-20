@@ -2,7 +2,7 @@ import { BsThreeDots } from "react-icons/bs"
 import ProfileBanner from "../components/Profile/ProfileBanner"
 import { useParams } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
-import TrackCard from "../components/Card/TrackCard"
+import TrackCard from "../components/Track/TrackCard"
 import { useEffect } from "react"
 import { getUserUpload } from "../features/track/trackSlice"
 
