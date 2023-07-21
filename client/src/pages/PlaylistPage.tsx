@@ -13,6 +13,7 @@ import { BsClock, BsPauseFill, BsPlayFill, BsThreeDots } from "react-icons/bs"
 import axios from "axios"
 import { duration } from "../utils/utils"
 import TrackInPlaylist from "../components/Playlist/TrackInPlaylist"
+import PlaylistOptions from "../components/Playlist/PlaylistOptions"
 
 const PlaylistPage = () => {
   const { id } = useParams()
@@ -32,29 +33,35 @@ const PlaylistPage = () => {
     })
   }
 
-  const getCreatorName = () => {
-    if (playlist)
-      axios.get(`/api/v1/user/${playlist?.creator}`).then((response) => {
-        const creatorName = response.data.user.username
-        setCreator(creatorName)
-      })
+  const getCreatorName = (userId: string) => {
+    axios.get(`/api/v1/user/${userId}`).then((response) => {
+      const creatorName = response.data.user.username
+      const isSameCreator = creatorName == creator
+      if (isSameCreator) return
+      setCreator(creatorName)
+    })
   }
 
   useEffect(() => {
-    getCreatorName()
     const ifSamePlaylist = playlist?.id == id
     if (ifSamePlaylist) {
-      setTrackBackgroundColor(playlist?.thumbnail as string)
       setIsLoading(false)
       return
     }
     dispatch(getPlaylistById(id as string))
       .unwrap()
       .then((playlist) => {
+        getCreatorName(playlist.creator)
         setTrackBackgroundColor(playlist.thumbnail)
         setIsLoading(false)
       })
   }, [id])
+
+  // Để check xem state viewedPlaylist có gì thay đổi khi cập nhật
+  useEffect(() => {
+    if (!playlist) return
+    setTrackBackgroundColor(playlist?.thumbnail as string)
+  }, [playlist])
 
   const ifSameSongIsPlaying = (track: Track) => {
     return player.playing && track.id == player.currentSong?.id
@@ -110,9 +117,7 @@ const PlaylistPage = () => {
                 <BsPlayFill size={42} />
               )}
             </button>
-            <button>
-              <BsThreeDots size={32} />
-            </button>
+            <PlaylistOptions />
           </div>
           <div className="flex my-4 text-linkwater/50 items-center justify-between gap-4 px-4 py-4 border-b border-white/5 font-light">
             <span>#</span>
@@ -122,7 +127,7 @@ const PlaylistPage = () => {
             </span>
           </div>
           {playlist?.trackList.map((track, index) => (
-            <TrackInPlaylist track={track} index={index} />
+            <TrackInPlaylist key={index} track={track} index={index} />
           ))}
         </div>
       </div>

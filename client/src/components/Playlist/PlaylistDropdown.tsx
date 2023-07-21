@@ -33,7 +33,7 @@ const PlaylistDropdown = () => {
 
   const handleCreateNewPlaylist = () => {
     const numberOfPlaylists = currentUserPlaylists.length + 1
-    const defaultNewPlaylistTitle = `My Playlist ${numberOfPlaylists}`
+    const defaultNewPlaylistTitle = `My Playlist #${numberOfPlaylists}`
 
     dispatch(createNewPlaylist(defaultNewPlaylistTitle))
   }
@@ -48,7 +48,7 @@ const PlaylistDropdown = () => {
       {toggleModal && (
         <>
           <div
-            className="bg-neutral-800 absolute left-0 top-10 rounded text-base font-normal w-48 p-1"
+            className="bg-neutral-800 absolute left-0 top-10 rounded text-base font-normal w-48 p-1 shadow-lg shadow-black/50"
             ref={dialogRef}
           >
             <button

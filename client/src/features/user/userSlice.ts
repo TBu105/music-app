@@ -50,8 +50,7 @@ export const uploadAvatar = createAsyncThunk(
   "user/updateAvatar",
   async (image: File) => {
     try {
-      const response = await uploadFile(image)
-      return response.data.fileURL
+      return await uploadFile(image)
     } catch (error: any) {
       throw Error(`Error: ${error.response.data.message}`)
     }

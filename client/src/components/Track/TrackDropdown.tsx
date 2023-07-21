@@ -6,6 +6,7 @@ import {
   addTrackToPlaylist,
   createNewPlaylist,
 } from "../../features/playlist/playlistSlice"
+import { addToQueue } from "../../features/player/playerSlice"
 
 type Props = {
   track: Track
@@ -41,7 +42,11 @@ const TrackDropdown = ({ track }: Props) => {
 
   const handleAddTrackToPlaylist = (id: string) => {
     dispatch(addTrackToPlaylist(id, track))
+    setToggleDropdown(false)
     alert("Thêm thành công")
+  }
+  const handleAddToQueue = () => {
+    dispatch(addToQueue(track))
   }
 
   return (
@@ -60,7 +65,7 @@ const TrackDropdown = ({ track }: Props) => {
           >
             <button
               className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full justify-between group relative"
-              onClick={() => {}}
+              onClick={handleAddToQueue}
             >
               Add to queue
             </button>

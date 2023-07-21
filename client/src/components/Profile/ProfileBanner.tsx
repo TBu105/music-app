@@ -7,7 +7,7 @@ import {
   uploadAvatar,
   updateUserById,
 } from "../../features/user/userSlice"
-import { getColor, rgbToHex } from "../../utils/colorthief"
+import { getColor } from "../../utils/colorthief"
 import { setAvatar } from "../../features/auth/authSlice"
 
 const ProfileBanner = () => {
@@ -210,7 +210,7 @@ const ProfileBanner = () => {
                     onChange={(e) => {
                       setNewUsername(e.target.value)
                     }}
-                    className="bg-neutral-800 p-2 focus:border-neutral-500 focus:outline-none focus:border rounded-md w-full"
+                    className="bg-neutral-800 p-2 focus:border-neutral-500 focus:outline-none focus:border rounded w-full"
                   />
                   <button
                     className="bg-jarcata rounded-full text-lg font-bold text-linkwater p-2 w-1/3"

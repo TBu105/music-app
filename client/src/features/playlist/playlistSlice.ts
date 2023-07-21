@@ -1,10 +1,5 @@
 import axios from "axios"
-import {
-  FullPlaylist,
-  IncompletePlaylist,
-  Playlist,
-  Track,
-} from "../../app/types"
+import { FullPlaylist, Playlist, Track } from "../../app/types"
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AppThunk } from "../../app/store"
 
@@ -27,18 +22,6 @@ const initialState: PlaylistState = {
   loading: true,
   error: null,
 }
-export const addTrackToPlaylist =
-  (playlistId: string, track: Track): AppThunk =>
-  async (dispatch) => {
-    try {
-      await api.post(`/playlist/${playlistId}/track/${track.id}`)
-      dispatch(
-        addTrackToPlaylistSuccess({ playlistId: playlistId, track: track }),
-      )
-    } catch (e: any) {
-      dispatch(addTrackToPlaylistFailure(`Error: ${e.response.data.error}`))
-    }
-  }
 
 export const getPlaylistById = createAsyncThunk(
   "playlist/fetchPlaylistAsync",
@@ -123,17 +106,87 @@ export const createNewPlaylist = createAsyncThunk(
     }
   },
 )
+export const updatePlaylistById =
+  (playlist: Partial<Playlist>): AppThunk =>
+  async (dispatch) => {
+    try {
+      const response = await api.patch(`/playlist/${playlist.id}`, {
+        title: playlist.title,
+        image: playlist.thumbnail,
+      })
+      const playlistData = response.data.playlist
+      dispatch(
+        updatePlaylistSuccess({
+          playlistId: playlistData._id,
+          title: playlistData.title,
+          thumbnail: playlistData.image,
+        }),
+      )
+    } catch (e: any) {
+      dispatch(addTrackToPlaylistFailure(`Error: ${e.response.data.error}`))
+    }
+  }
+
+export const addTrackToPlaylist =
+  (playlistId: string, track: Track): AppThunk =>
+  async (dispatch) => {
+    try {
+      await api.post(`/playlist/${playlistId}/track/${track.id}`)
+      dispatch(
+        addTrackToPlaylistSuccess({ playlistId: playlistId, track: track }),
+      )
+    } catch (e: any) {
+      dispatch(addTrackToPlaylistFailure(`Error: ${e.response.data.error}`))
+    }
+  }
+export const removeTrackFromPlaylist =
+  (playlistId: string, track: Track, index: number): AppThunk =>
+  async (dispatch) => {
+    try {
+      await api.delete(`/playlist/${playlistId}/track/${track.id}`)
+      dispatch(
+        removeTrackFromPlaylistSuccess({
+          playlistId: playlistId,
+          index: index,
+        }),
+      )
+    } catch (error) {}
+  }
 
 const playlistSlice = createSlice({
   name: "playlist",
   initialState,
   reducers: {
     addTrackToPlaylistSuccess: (state, action) => {
+      state.error = null
       if (state.viewedPlaylist?.id != action.payload.playlistId) return
       state.viewedPlaylist?.trackList.push(action.payload.track)
-      state.error = null
     },
     addTrackToPlaylistFailure: (state, action: PayloadAction<string>) => {
+      state.error = action.payload
+    },
+    removeTrackFromPlaylistSuccess: (state, action) => {
+      state.error = null
+      if (state.viewedPlaylist?.id != action.payload.playlistId) return
+      state.viewedPlaylist?.trackList.splice(action.payload.index, 1)
+    },
+    removeTrackFromPlaylistFailure: (state, action: PayloadAction<string>) => {
+      state.error = action.payload
+    },
+    updatePlaylistSuccess: (state, action) => {
+      state.error = null
+      if (state.viewedPlaylist) {
+        state.viewedPlaylist.title = action.payload.title
+        state.viewedPlaylist.thumbnail = action.payload.thumbnail
+      }
+      for (const Playlist of state.currentUserPlaylist) {
+        if (Playlist.id == action.payload.playlistId) {
+          Playlist.title = action.payload.title
+          Playlist.thumbnail = action.payload.thumbnail
+        }
+      }
+    },
+    updatePlaylistFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload
     },
   },
@@ -174,7 +227,13 @@ const playlistSlice = createSlice({
   },
 })
 
-export const { addTrackToPlaylistSuccess, addTrackToPlaylistFailure } =
-  playlistSlice.actions
+export const {
+  addTrackToPlaylistSuccess,
+  addTrackToPlaylistFailure,
+  removeTrackFromPlaylistSuccess,
+  removeTrackFromPlaylistFailure,
+  updatePlaylistSuccess,
+  updatePlaylistFailure,
+} = playlistSlice.actions
 
 export default playlistSlice.reducer

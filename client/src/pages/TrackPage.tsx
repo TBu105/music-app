@@ -35,7 +35,10 @@ const TrackPage = () => {
 
   useEffect(() => {
     const isSameTrack = track?.id == id
-    if (isSameTrack) return
+    if (isSameTrack) {
+      setTrackBackgroundColor(track?.thumbnail as string)
+      return
+    }
     dispatch(fetchTrackById(id as string))
       .unwrap()
       .then((track) => {
