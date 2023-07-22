@@ -43,7 +43,6 @@ const TrackDropdown = ({ track }: Props) => {
   const handleAddTrackToPlaylist = (id: string) => {
     dispatch(addTrackToPlaylist(id, track))
     setToggleDropdown(false)
-    alert("Thêm thành công")
   }
   const handleAddToQueue = () => {
     dispatch(addToQueue(track))

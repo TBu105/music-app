@@ -3,6 +3,7 @@ import { User } from "../../app/types"
 import axios from "axios"
 import { AppThunk } from "../../app/store"
 import { uploadFile } from "../../utils/uploadfile"
+import { toast } from "react-toastify"
 
 interface UserState {
   userData: User | null
@@ -89,6 +90,7 @@ const userSlice = createSlice({
     updateUserSuccess: (state, action) => {
       state.error = null
       state.userData = action.payload
+      toast("User profile updated!")
     },
     updateUserFailure: (state, action) => {
       state.error = action.payload

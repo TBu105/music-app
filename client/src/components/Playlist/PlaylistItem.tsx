@@ -17,7 +17,7 @@ const PlaylistItem = ({ playlist }: Props) => {
       <img
         src={playlist.thumbnail}
         alt={playlist.title}
-        className="rounded-sm aspect-square h-full"
+        className="rounded-sm aspect-square h-full object-cover"
       />
       <div className="flex flex-col">
         <span className="font-medium text-base">{playlist.title}</span>

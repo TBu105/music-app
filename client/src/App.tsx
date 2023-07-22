@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "./app/hooks"
 import { getCurrentUser } from "./features/auth/authSlice"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import "react-toastify/dist/ReactToastify.css"
 
 //layout imports
 import MainLayout from "./layout/MainLayout"
@@ -18,6 +19,7 @@ import EditProfile from "./pages/EditProfile"
 import ChangePassword from "./pages/ChangePassword"
 import TrackPage from "./pages/TrackPage"
 import PlaylistPage from "./pages/PlaylistPage"
+import QueuePage from "./pages/QueuePage"
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -37,6 +39,7 @@ const App = () => {
           <Route path="/user/:id" element={<ProfilePage />} />
           <Route path="/track/:id" element={<TrackPage />} />
           <Route path="/playlist/:id" element={<PlaylistPage />} />
+          <Route path="/queue" element={<QueuePage />} />
         </Route>
         <Route path="/account" element={<UserLayout />}>
           <Route path="login" element={<Login />} />

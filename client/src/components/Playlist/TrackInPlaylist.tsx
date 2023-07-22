@@ -4,6 +4,7 @@ import { duration } from "../../utils/utils"
 import { BsThreeDots } from "react-icons/bs"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { removeTrackFromPlaylist } from "../../features/playlist/playlistSlice"
+import { useNavigate } from "react-router-dom"
 
 type Props = {
   track: Track
@@ -14,6 +15,7 @@ const TrackInPlaylist = ({ index, track }: Props) => {
   const viewedPlaylist = useAppSelector(
     (state) => state.playlist.viewedPlaylist,
   )
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [toggleDropdown, setToggleDropdown] = useState(false)
 
@@ -79,10 +81,18 @@ const TrackInPlaylist = ({ index, track }: Props) => {
           </button>
           <button
             className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full"
-            onClick={handleRemoveFromPlaylist}
+            onClick={() => navigate(`/track/${track.id}`)}
           >
-            Remove from this playlist
+            Go to this track page
           </button>
+          {viewedPlaylist && (
+            <button
+              className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full"
+              onClick={handleRemoveFromPlaylist}
+            >
+              Remove from this playlist
+            </button>
+          )}
         </div>
       )}
     </div>

@@ -1,5 +1,6 @@
 import React from "react"
 import { BsVolumeMuteFill, BsVolumeUpFill } from "react-icons/bs"
+import CheckOnQueue from "../Buttons/CheckOnQueue"
 
 type Props = {
   volume: number
@@ -19,7 +20,8 @@ const VolumeSlider = ({
     handleVolumeChange(Number(e.target.value))
   }
   return (
-    <div className="flex justify-end items-center px-4 gap-1 rounded-lg w-1/3">
+    <div className="flex justify-end items-center px-4 gap-2 rounded-lg w-1/3">
+      <CheckOnQueue />
       <button className="" onClick={toggleMute}>
         {muted ? <BsVolumeMuteFill size={24} /> : <BsVolumeUpFill size={24} />}
       </button>

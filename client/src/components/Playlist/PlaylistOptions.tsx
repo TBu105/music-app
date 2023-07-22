@@ -3,6 +3,7 @@ import { BsThreeDots } from "react-icons/bs"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import PlaylistEditModal from "./PlaylistEditModal"
 import { FullPlaylist } from "../../app/types"
+import { addPlaylistToQueue } from "../../features/player/playerSlice"
 
 const PlaylistOptions = () => {
   const viewedPlaylist = useAppSelector(
@@ -38,6 +39,10 @@ const PlaylistOptions = () => {
     }
   }, [])
 
+  const handleAddPlaylistToQueue = () => {
+    dispatch(addPlaylistToQueue(viewedPlaylist as FullPlaylist))
+  }
+
   return (
     <div className="relative h-8 w-8">
       <button onClick={handleToggleDropdown}>
@@ -48,7 +53,10 @@ const PlaylistOptions = () => {
           className="bg-neutral-800 absolute left-0 top-10 rounded text-base font-normal w-48 p-1 shadow-lg shadow-black/50"
           ref={dialogRef}
         >
-          <button className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full border-b border-white/5">
+          <button
+            className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full border-b border-white/5"
+            onClick={handleAddPlaylistToQueue}
+          >
             Add to queue
           </button>
           <button

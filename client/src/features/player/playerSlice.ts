@@ -1,7 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { Track } from "../../app/types"
+import { FullPlaylist, Track } from "../../app/types"
 import { OnProgressProps } from "react-player/base"
 import { AppThunk } from "../../app/store"
+import { toast } from "react-toastify"
 
 interface PlayerState {
   currentSong: Track | null
@@ -65,9 +66,21 @@ const playerSlice = createSlice({
       if (state.currentSong?.id != action.payload.id)
         state.playerQueue.push(action.payload)
     },
+    addPlaylistToQueue: (state, action: PayloadAction<FullPlaylist>) => {
+      for (const Track of action.payload.trackList) {
+        state.playerQueue.push(Track)
+      }
+      toast("Added to queue!")
+    },
     playNewSong: (state) => {
       state.currentSong = state.playerQueue.at(-1) as Track
       state.queue = state.playerQueue.length - 1
+      state.playing = true
+    },
+    playEntirePlaylist: (state, action: PayloadAction<FullPlaylist>) => {
+      state.currentSong = action.payload.trackList[0]
+      state.playerQueue = action.payload.trackList
+      state.queue = 0
       state.playing = true
     },
     previousTrack: (state) => {
@@ -91,7 +104,9 @@ export const {
   playerDuration,
   toggleLoopSingleTrack,
   addToQueue,
+  addPlaylistToQueue,
   playNewSong,
+  playEntirePlaylist,
   previousTrack,
   nextTrack,
 } = playerSlice.actions

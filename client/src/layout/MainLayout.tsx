@@ -8,6 +8,7 @@ import { useAppSelector, useAppDispatch } from "../app/hooks"
 import { logoutAsync } from "../features/auth/authSlice"
 import PlayerBar from "../components/Player/PlayerBar"
 import Upload from "../components/Buttons/Upload"
+import { ToastContainer } from "react-toastify"
 
 const MainLayout = () => {
   const navigate = useNavigate()
@@ -58,6 +59,18 @@ const MainLayout = () => {
       </main>
       <Sidebar />
       <PlayerBar />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        theme="dark"
+      />
     </div>
   )
 }

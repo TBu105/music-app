@@ -2,6 +2,7 @@ import axios from "axios"
 import { FullPlaylist, Playlist, Track } from "../../app/types"
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AppThunk } from "../../app/store"
+import { toast } from "react-toastify"
 
 const api = axios.create({
   baseURL: "/api/v1",
@@ -94,10 +95,12 @@ export const createNewPlaylist = createAsyncThunk(
     try {
       const response = await api.post("/playlist/create", { title })
       const playlistData = response.data.playlist
+      const creator = await axios.get(`/api/v1/user/${playlistData.userId}`)
+      let creatorName: string = response.data.user.username
       var transformedPlaylist: Playlist = {
         id: playlistData._id,
         title: playlistData.title,
-        creator: playlistData.userId,
+        creator: creatorName,
         thumbnail: playlistData.image,
       }
       return transformedPlaylist
@@ -147,6 +150,7 @@ export const removeTrackFromPlaylist =
       dispatch(
         removeTrackFromPlaylistSuccess({
           playlistId: playlistId,
+          track: track,
           index: index,
         }),
       )
@@ -159,14 +163,18 @@ const playlistSlice = createSlice({
   reducers: {
     addTrackToPlaylistSuccess: (state, action) => {
       state.error = null
+      const track = action.payload.track
+      toast(`Added ${track.artist} - ${track.title} to playlist!`)
       if (state.viewedPlaylist?.id != action.payload.playlistId) return
-      state.viewedPlaylist?.trackList.push(action.payload.track)
+      state.viewedPlaylist?.trackList.push(track)
     },
     addTrackToPlaylistFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload
     },
     removeTrackFromPlaylistSuccess: (state, action) => {
       state.error = null
+      const track = action.payload.track
+      toast(`Removed ${track.artist} - ${track.title} from this playlist!`)
       if (state.viewedPlaylist?.id != action.payload.playlistId) return
       state.viewedPlaylist?.trackList.splice(action.payload.index, 1)
     },
@@ -185,6 +193,7 @@ const playlistSlice = createSlice({
           Playlist.thumbnail = action.payload.thumbnail
         }
       }
+      toast("✔️ Update playlist success!")
     },
     updatePlaylistFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload

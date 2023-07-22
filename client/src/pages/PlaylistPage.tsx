@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
-import { Track } from "../app/types"
+import { FullPlaylist, Track } from "../app/types"
 import {
   setPause,
   addToQueue,
   playNewSong,
+  playEntirePlaylist,
 } from "../features/player/playerSlice"
 import { getColor } from "../utils/colorthief"
 import { getPlaylistById } from "../features/playlist/playlistSlice"
@@ -14,14 +15,15 @@ import axios from "axios"
 import { duration } from "../utils/utils"
 import TrackInPlaylist from "../components/Playlist/TrackInPlaylist"
 import PlaylistOptions from "../components/Playlist/PlaylistOptions"
+import { ToastContainer } from "react-toastify"
 
 const PlaylistPage = () => {
   const { id } = useParams()
   const dispatch = useAppDispatch()
-  const [isLoading, setIsLoading] = useState(true)
   const [creator, setCreator] = useState("")
   const player = useAppSelector((state) => state.player)
   const playlist = useAppSelector((state) => state.playlist.viewedPlaylist)
+  const isLoading = useAppSelector((state) => state.playlist.loading)
 
   // fetching user
   const [bgColor, setBgColor] = useState("#777777")
@@ -36,24 +38,19 @@ const PlaylistPage = () => {
   const getCreatorName = (userId: string) => {
     axios.get(`/api/v1/user/${userId}`).then((response) => {
       const creatorName = response.data.user.username
-      const isSameCreator = creatorName == creator
-      if (isSameCreator) return
       setCreator(creatorName)
     })
   }
 
+  getCreatorName(playlist?.creator as string)
+
   useEffect(() => {
     const ifSamePlaylist = playlist?.id == id
-    if (ifSamePlaylist) {
-      setIsLoading(false)
-      return
-    }
+    if (ifSamePlaylist) return
     dispatch(getPlaylistById(id as string))
       .unwrap()
       .then((playlist) => {
-        getCreatorName(playlist.creator)
         setTrackBackgroundColor(playlist.thumbnail)
-        setIsLoading(false)
       })
   }, [id])
 
@@ -67,15 +64,10 @@ const PlaylistPage = () => {
     return player.playing && track.id == player.currentSong?.id
   }
 
-  const handlePlaySong = (track: Track) => {
-    if (ifSameSongIsPlaying(track)) {
-      dispatch(setPause())
-    } else {
-      dispatch(addToQueue(track))
-      dispatch(playNewSong())
-    }
+  const handlePlayPlaylist = () => {
+    dispatch(playEntirePlaylist(playlist as FullPlaylist))
   }
-  if (!isLoading)
+  if (!isLoading && playlist)
     return (
       <div className="w-full text-linkwater">
         <div
@@ -109,7 +101,7 @@ const PlaylistPage = () => {
           <div className="flex items-center gap-8">
             <button
               className="rounded-full w-16 h-16 bg-jarcata-500 flex justify-center items-center hover:brightness-105"
-              onClick={() => {}}
+              onClick={handlePlayPlaylist}
             >
               {player.playing && playlist?.id == player.currentSong?.id ? (
                 <BsPauseFill size={42} />
@@ -119,13 +111,15 @@ const PlaylistPage = () => {
             </button>
             <PlaylistOptions />
           </div>
-          <div className="flex my-4 text-linkwater/50 items-center justify-between gap-4 px-4 py-4 border-b border-white/5 font-light">
-            <span>#</span>
-            <span className="flex-grow">Title</span>
-            <span className="mr-4">
-              <BsClock />
-            </span>
-          </div>
+          {playlist.trackList.length > 0 && (
+            <div className="flex my-4 text-linkwater/50 items-center justify-between gap-4 px-4 py-4 border-b border-white/5 font-light">
+              <span>#</span>
+              <span className="flex-grow">Title</span>
+              <span className="mr-4">
+                <BsClock />
+              </span>
+            </div>
+          )}
           {playlist?.trackList.map((track, index) => (
             <TrackInPlaylist key={index} track={track} index={index} />
           ))}
