@@ -1,4 +1,5 @@
 const Playlist = require("../Model/Playlist");
+const User = require("../Model/User");
 const { checkPermissonToChangeInfo } = require("../Utils/checkPermission");
 
 const createPlaylist = async (req, res) => {
@@ -87,8 +88,10 @@ const deleteTrackFromPlaylist = async (req, res) => {
 const addTrackToLikedMusic = async (req, res) => {
   const { trackid } = req.params;
 
+  const user = await User.findById({ _id: req.user.userId });
+
   const playlist = await Playlist.findByIdAndUpdate(
-    { _id: "64abbb516484a75ae1ddeae0" },
+    { _id: user.likedMusic },
     { $push: { trackId: trackid } },
     {
       new: true,
@@ -102,18 +105,28 @@ const addTrackToLikedMusic = async (req, res) => {
 };
 const deleteTrackFromLikedMusic = async (req, res) => {
   const { trackid } = req.params;
-  const playlist = await Playlist.findByIdAndUpdate(
-    { _id: "64abbb516484a75ae1ddeae0" },
-    { $pull: { trackId: trackid } },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
 
-  res
-    .status(200)
-    .json({ message: "Delete track from liked music successfully", playlist });
+  const user = await User.findById({ _id: req.user.userId });
+
+  const playlist = await Playlist.findById({ _id: user.likedMusic });
+
+  //find the index of the track id need to delete in trackId array
+  const trackIndex = playlist.trackId.indexOf(trackid);
+
+  if (trackIndex !== -1) {
+    // Remove the trackId from the array
+    playlist.trackId.splice(trackIndex, 1);
+
+    // Save the updated document back to the database
+    await playlist.save();
+
+    res.status(200).json({
+      message: "Delete track from liked music successfully",
+      playlist,
+    });
+  } else {
+    res.status(500).json({ message: "TrackId not found in the array." });
+  }
 };
 
 module.exports = {

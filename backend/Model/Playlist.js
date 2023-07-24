@@ -13,7 +13,7 @@ const PlaylistSchema = new mongoose.Schema(
     },
     title: {
       type: String,
-      require: [true, "Please provide playlist title"],
+      require: [true, "Please provide playlist title."],
       maxlength: [50, "playlist title must smaller than 50 character"],
       minlength: [1, "playlist title must have at least one character"],
     },

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 //import validator package to validate the email
 const validatorPackage = require("validator");
 const bcrypt = require("bcrypt");
+const Playlist = require("./Playlist");
 
 //Create a schema using mongoose
 const UserSchema = new mongoose.Schema({
@@ -46,7 +47,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     require: [true, "Please provide your password"],
     minlength: [3, "Your username must longer than 3 characters"],
-    maxlength: [25, "Your is too long, it must under 25 characters"],
     trim: true,
   },
   follower: {
@@ -57,6 +57,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default:
       "http://res.cloudinary.com/music-app-cty/image/upload/v1687156704/pbphlpmuey95u7jnjhtu.jpg",
+  },
+  likedMusic: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: Playlist,
   },
 });
 
