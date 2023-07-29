@@ -1,4 +1,5 @@
 const User = require("../Model/User");
+const Playlist = require("../Model/Playlist");
 
 const { attachTokenToCookies } = require("../Utils/jwt");
 
@@ -26,9 +27,19 @@ const register = async (req, res) => {
     birthday,
     gender,
     password,
-    role,
-    image,
   });
+
+  // create Liked Music playlist when user is created
+  const playlistObj = {
+    userId: user._id,
+    title: "Liked Music",
+  };
+  const likedMusicPlaylist = await Playlist.create(playlistObj);
+
+  //set user liked music equal playlist id
+  user.likedMusic = likedMusicPlaylist._id;
+
+  user.save();
 
   //create payload
   const tokenUser = { email: user.email, userId: user._id, role: user.role };

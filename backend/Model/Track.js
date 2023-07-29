@@ -30,7 +30,6 @@ const TrackSchema = new mongoose.Schema(
     },
     lyrics: {
       type: String,
-      require: [true, "Your song must have lyrics"],
       minlength: [1, "Your song must have more than 1 character"],
     },
     publicDate: {

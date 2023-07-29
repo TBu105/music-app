@@ -8,11 +8,14 @@ const {
   updateUserPassword,
   deleteUserById,
   showCurrentUser,
+  addLikedMusicToAll,
 } = require("../Controller/userController");
 
 const { authenticateUser } = require("../Middleware/authentication");
 
 router.route("/").get(authenticateUser, getAllUsers);
+
+router.route("/likedmusic").get(authenticateUser, addLikedMusicToAll);
 
 router.route("/currentUser").get(authenticateUser, showCurrentUser);
 

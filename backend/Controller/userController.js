@@ -1,4 +1,5 @@
 const User = require("../Model/User");
+const Playlist = require("../Model/Playlist");
 
 const { attachTokenToCookies } = require("../Utils/jwt");
 
@@ -21,6 +22,27 @@ const getUserById = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   const allUsers = await User.find({});
+  res.status(200).json({ message: "List all user", users: allUsers });
+};
+
+const addLikedMusicToAll = async (req, res) => {
+  const allUsers = await User.find({
+    _id: { $ne: "64be0195fa390b751500afb3" },
+  });
+
+  for (const user of allUsers) {
+    const playlistObj = {
+      userId: user._id,
+      title: "Liked Music",
+    };
+    const likedMusicPlaylist = await Playlist.create(playlistObj);
+
+    //set user liked music equal playlist id
+    user.likedMusic = likedMusicPlaylist._id;
+
+    user.save();
+  }
+
   res.status(200).json({ message: "List all user", users: allUsers });
 };
 
@@ -90,4 +112,5 @@ module.exports = {
   updateUserPassword,
   deleteUserById,
   showCurrentUser,
+  addLikedMusicToAll,
 };
