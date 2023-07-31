@@ -30,7 +30,7 @@ const TrackCard = ({ track }: Props) => {
         <img
           src={track.thumbnail}
           alt=""
-          className="w-full aspect-square object-fill rounded"
+          className="w-full aspect-square object-cover rounded"
         />
         <button
           className="rounded-full w-12 aspect-square absolute -bottom-2 right-1 bg-jarcata-500 flex justify-center items-center opacity-0 group-hover:opacity-100 group-hover:bottom-1 transition-all duration-500"

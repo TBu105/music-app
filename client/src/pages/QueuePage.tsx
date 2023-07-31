@@ -12,7 +12,7 @@ const QueuePage = () => {
       <h2 className="text-2xl font-bold">Queue</h2>
       <p className="my-4 text-lg font-semibold opacity-50">Now playing</p>
       <TrackInPlaylist track={currentSong as Track} index={0} />
-      {playerQueue.length > 1 && playerQueue.length != queue && (
+      {playerQueue.length > 1 && playerQueue.length != queue + 1 && (
         <p className="my-4 text-lg font-semibold opacity-50">Next in queue</p>
       )}
       {playerQueue.slice(queue + 1).map((track, index) => (

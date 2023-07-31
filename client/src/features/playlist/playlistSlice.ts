@@ -95,14 +95,13 @@ export const createNewPlaylist = createAsyncThunk(
     try {
       const response = await api.post("/playlist/create", { title })
       const playlistData = response.data.playlist
-      const creator = await axios.get(`/api/v1/user/${playlistData.userId}`)
-      let creatorName: string = response.data.user.username
       var transformedPlaylist: Playlist = {
         id: playlistData._id,
         title: playlistData.title,
-        creator: creatorName,
+        creator: playlistData.userId,
         thumbnail: playlistData.image,
       }
+      console.log(transformedPlaylist)
       return transformedPlaylist
     } catch (e: any) {
       throw Error(`Error: ${e.response.data.error}`)
@@ -128,6 +127,15 @@ export const updatePlaylistById =
     } catch (e: any) {
       dispatch(addTrackToPlaylistFailure(`Error: ${e.response.data.error}`))
     }
+  }
+
+export const deletePlaylistById =
+  (playlistId: string): AppThunk =>
+  async (dispatch) => {
+    const response = await api.delete(`/playlist/${playlistId}`)
+    dispatch(
+      deletePlaylistSuccess({ message: response.data.message, id: playlistId }),
+    )
   }
 
 export const addTrackToPlaylist =
@@ -198,6 +206,14 @@ const playlistSlice = createSlice({
     updatePlaylistFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload
     },
+    deletePlaylistSuccess: (state, action) => {
+      state.viewedPlaylist = null
+      state.currentUserPlaylist = state.currentUserPlaylist.filter(
+        (playlist) => playlist.id != action.payload.id,
+      )
+      state.error = null
+      toast(action.payload.message)
+    },
   },
   extraReducers(builder) {
     builder.addCase(createNewPlaylist.pending, (state) => {
@@ -243,6 +259,7 @@ export const {
   removeTrackFromPlaylistFailure,
   updatePlaylistSuccess,
   updatePlaylistFailure,
+  deletePlaylistSuccess,
 } = playlistSlice.actions
 
 export default playlistSlice.reducer

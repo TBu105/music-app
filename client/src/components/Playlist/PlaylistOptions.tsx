@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import PlaylistEditModal from "./PlaylistEditModal"
 import { FullPlaylist } from "../../app/types"
 import { addPlaylistToQueue } from "../../features/player/playerSlice"
+import { deletePlaylistById } from "../../features/playlist/playlistSlice"
+import { useNavigate } from "react-router-dom"
 
 const PlaylistOptions = () => {
   const viewedPlaylist = useAppSelector(
@@ -11,9 +13,11 @@ const PlaylistOptions = () => {
   )
   const [toggleDropdown, setToggleDropdown] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
   const dialogRef: React.RefObject<HTMLDivElement> = useRef(null)
   const imageRef = useRef<HTMLInputElement>(null)
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const handleToggleDropdown = () => {
     setToggleDropdown((prev) => !prev)
@@ -43,6 +47,12 @@ const PlaylistOptions = () => {
     dispatch(addPlaylistToQueue(viewedPlaylist as FullPlaylist))
   }
 
+  const handleDeletePlaylist = () => {
+    if (!viewedPlaylist) return
+    dispatch(deletePlaylistById(viewedPlaylist.id))
+    navigate("/")
+  }
+
   return (
     <div className="relative h-8 w-8">
       <button onClick={handleToggleDropdown}>
@@ -50,7 +60,7 @@ const PlaylistOptions = () => {
       </button>
       {toggleDropdown && (
         <div
-          className="bg-neutral-800 absolute left-0 top-10 rounded text-base font-normal w-48 p-1 shadow-lg shadow-black/50"
+          className="bg-neutral-800 absolute left-0 top-10 rounded text-base font-normal w-48 p-1 shadow-lg shadow-black/50 z-10"
           ref={dialogRef}
         >
           <button
@@ -65,6 +75,12 @@ const PlaylistOptions = () => {
           >
             Edit details
           </button>
+          <button
+            className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full"
+            onClick={handleDeletePlaylist}
+          >
+            Delete
+          </button>
         </div>
       )}
       {showEditModal && (
@@ -74,6 +90,7 @@ const PlaylistOptions = () => {
           playlist={viewedPlaylist as FullPlaylist}
         />
       )}
+      {showConfirmDeleteModal}
     </div>
   )
 }

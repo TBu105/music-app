@@ -76,7 +76,7 @@ const PlaylistEditModal = ({ toggleModal, imageRef, playlist }: Props) => {
           <div className="flex py-6 items-center gap-4">
             <div className="relative group">
               {!preview ? (
-                <div className="bg-neutral-700 rounded-full w-52 h-52 flex items-center justify-center shadow-lg shadow-black/50"></div>
+                <div className="bg-neutral-700 w-52 h-52 flex items-center justify-center shadow-lg shadow-black/50"></div>
               ) : (
                 <img
                   src={preview}

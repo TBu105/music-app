@@ -15,7 +15,7 @@ const PlaylistList = () => {
   useEffect(() => {
     if (!currentUserId) return
 
-    dispatch(getCurrentUserPlaylist(currentUserId as string))
+    dispatch(getCurrentUserPlaylist(currentUserId))
   }, [currentUserId])
 
   if (loading) return <PlaylistItemSkeleton itemCount={7} />

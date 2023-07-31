@@ -42,14 +42,16 @@ const PlaylistPage = () => {
     })
   }
 
-  getCreatorName(playlist?.creator as string)
-
   useEffect(() => {
     const ifSamePlaylist = playlist?.id == id
-    if (ifSamePlaylist) return
+    if (ifSamePlaylist) {
+      getCreatorName(playlist?.creator as string)
+      return
+    }
     dispatch(getPlaylistById(id as string))
       .unwrap()
       .then((playlist) => {
+        getCreatorName(playlist.creator)
         setTrackBackgroundColor(playlist.thumbnail)
       })
   }, [id])
@@ -109,7 +111,7 @@ const PlaylistPage = () => {
                 <BsPlayFill size={42} />
               )}
             </button>
-            <PlaylistOptions />
+            {playlist.title != "Liked Music" && <PlaylistOptions />}
           </div>
           {playlist.trackList.length > 0 && (
             <div className="flex my-4 text-linkwater/50 items-center justify-between gap-4 px-4 py-4 border-b border-white/5 font-light">

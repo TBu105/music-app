@@ -32,7 +32,7 @@ const PlaylistDropdown = () => {
   }, [])
 
   const handleCreateNewPlaylist = () => {
-    const numberOfPlaylists = currentUserPlaylists.length + 1
+    const numberOfPlaylists = currentUserPlaylists.length
     const defaultNewPlaylistTitle = `My Playlist #${numberOfPlaylists}`
 
     dispatch(createNewPlaylist(defaultNewPlaylistTitle))
