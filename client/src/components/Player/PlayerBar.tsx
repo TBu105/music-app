@@ -99,11 +99,7 @@ const PlayerBar = () => {
         style={{ display: "none" }}
       />
       {currentSong ? (
-        <TrackDetail
-          title={currentSong.title}
-          artist={currentSong.artist}
-          thumbnail={currentSong.thumbnail}
-        />
+        <TrackDetail track={currentSong} />
       ) : (
         <div className="w-1/3"></div>
       )}

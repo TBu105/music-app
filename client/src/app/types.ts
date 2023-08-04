@@ -33,7 +33,7 @@ export interface Playlist {
   thumbnail: string
 }
 export interface IncompletePlaylist extends Playlist {
-  tracks: number
+  trackIds: string[]
 }
 export interface FullPlaylist extends Playlist {
   trackList: Track[]

@@ -1,5 +1,10 @@
 import axios from "axios"
-import { FullPlaylist, Playlist, Track } from "../../app/types"
+import {
+  FullPlaylist,
+  IncompletePlaylist,
+  Playlist,
+  Track,
+} from "../../app/types"
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AppThunk } from "../../app/store"
 import { toast } from "react-toastify"
@@ -10,7 +15,7 @@ const api = axios.create({
 
 interface PlaylistState {
   viewedPlaylist: FullPlaylist | null
-  currentUserPlaylist: Playlist[]
+  currentUserPlaylist: IncompletePlaylist[]
   otherUserPlaylist: Playlist[]
   loading: boolean
   error: string | null
@@ -69,15 +74,16 @@ export const getCurrentUserPlaylist = createAsyncThunk(
     try {
       const response = await api.get(`/playlist/all/${id}`)
       const playlistData = response.data.playlist
-      const playlists: Playlist[] = await Promise.all(
+      const playlists: IncompletePlaylist[] = await Promise.all(
         playlistData.map(async (playlist: any) => {
           const response = await axios.get(`/api/v1/user/${playlist.userId}`)
           let creator: string = response.data.user.username
-          var transformedPlaylist: Playlist = {
+          var transformedPlaylist: IncompletePlaylist = {
             id: playlist._id,
             title: playlist.title,
             creator: creator,
             thumbnail: playlist.image,
+            trackIds: playlist.trackId,
           }
           return transformedPlaylist
         }),
@@ -95,11 +101,12 @@ export const createNewPlaylist = createAsyncThunk(
     try {
       const response = await api.post("/playlist/create", { title })
       const playlistData = response.data.playlist
-      var transformedPlaylist: Playlist = {
+      var transformedPlaylist: IncompletePlaylist = {
         id: playlistData._id,
         title: playlistData.title,
         creator: playlistData.userId,
         thumbnail: playlistData.image,
+        trackIds: [],
       }
       console.log(transformedPlaylist)
       return transformedPlaylist
@@ -150,6 +157,7 @@ export const addTrackToPlaylist =
       dispatch(addTrackToPlaylistFailure(`Error: ${e.response.data.error}`))
     }
   }
+
 export const removeTrackFromPlaylist =
   (playlistId: string, track: Track, index: number): AppThunk =>
   async (dispatch) => {
@@ -165,10 +173,30 @@ export const removeTrackFromPlaylist =
     } catch (error) {}
   }
 
+export const addTrackToLikedMusic =
+  (track: Track): AppThunk =>
+  async (dispatch) => {
+    try {
+      await api.post(`/playlist/likedmusic/track/${track.id}`)
+      dispatch(addTrackToLikedMusicSuccess(track))
+    } catch (e: any) {
+      dispatch(addTrackToLikedMusicFailure(`Error: ${e.response.data.error}`))
+    }
+  }
+export const removeTrackFromLikedMusic =
+  (track: Track): AppThunk =>
+  async (dispatch) => {
+    try {
+      await api.delete(`/playlist/likedmusic/track/${track.id}`)
+      dispatch(removeTrackFromLikedMusicSuccess(track))
+    } catch (e: any) {}
+  }
+
 const playlistSlice = createSlice({
   name: "playlist",
   initialState,
   reducers: {
+    //Regular playlist
     addTrackToPlaylistSuccess: (state, action) => {
       state.error = null
       const track = action.payload.track
@@ -183,7 +211,7 @@ const playlistSlice = createSlice({
       state.error = null
       const track = action.payload.track
       toast(`Removed ${track.artist} - ${track.title} from this playlist!`)
-      if (state.viewedPlaylist?.id != action.payload.playlistId) return
+      if (state.viewedPlaylist?.title != action.payload.playlistId) return
       state.viewedPlaylist?.trackList.splice(action.payload.index, 1)
     },
     removeTrackFromPlaylistFailure: (state, action: PayloadAction<string>) => {
@@ -213,6 +241,34 @@ const playlistSlice = createSlice({
       )
       state.error = null
       toast(action.payload.message)
+    },
+    //Liked Music
+    addTrackToLikedMusicSuccess: (state, action: PayloadAction<Track>) => {
+      state.error = null
+      const track = action.payload
+      toast(`Added ${track.artist} - ${track.title} to Liked Music!`)
+      state.currentUserPlaylist
+        .find((playlist) => playlist.title == "Liked Music")
+        ?.trackIds.push(track.id)
+      if (state.viewedPlaylist?.title != "Liked Music") return
+      state.viewedPlaylist?.trackList.push(track)
+    },
+    addTrackToLikedMusicFailure: (state, action: PayloadAction<string>) => {
+      state.error = action.payload
+    },
+    removeTrackFromLikedMusicSuccess: (state, action: PayloadAction<Track>) => {
+      state.error = null
+      const track = action.payload
+      toast(`Removed ${track.artist} - ${track.title} from Liked Music!`)
+      const playlist = state.currentUserPlaylist.find(
+        (playlist) => playlist.title === "Liked Music",
+      )
+      const index = playlist?.trackIds.indexOf(track.id)
+      playlist?.trackIds.splice(index as number, 1)
+      if (state.viewedPlaylist?.title != "Liked Music") return
+      state.viewedPlaylist.trackList = state.viewedPlaylist.trackList.filter(
+        (trackInPlaylist) => trackInPlaylist.id != track.id,
+      )
     },
   },
   extraReducers(builder) {
@@ -255,8 +311,11 @@ const playlistSlice = createSlice({
 export const {
   addTrackToPlaylistSuccess,
   addTrackToPlaylistFailure,
+  addTrackToLikedMusicSuccess,
+  addTrackToLikedMusicFailure,
   removeTrackFromPlaylistSuccess,
   removeTrackFromPlaylistFailure,
+  removeTrackFromLikedMusicSuccess,
   updatePlaylistSuccess,
   updatePlaylistFailure,
   deletePlaylistSuccess,

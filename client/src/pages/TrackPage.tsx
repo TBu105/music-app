@@ -9,20 +9,37 @@ import {
   setPause,
 } from "../features/player/playerSlice"
 import { Track } from "../app/types"
-import { BsHeart, BsPauseFill, BsPlayFill, BsThreeDots } from "react-icons/bs"
+import {
+  BsHeart,
+  BsHeartFill,
+  BsPauseFill,
+  BsPlayFill,
+  BsThreeDots,
+} from "react-icons/bs"
 import { duration } from "../utils/utils"
 import TrackDropdown from "../components/Track/TrackDropdown"
+import {
+  addTrackToLikedMusic,
+  removeTrackFromLikedMusic,
+} from "../features/playlist/playlistSlice"
+import axios from "axios"
 
 const TrackPage = () => {
   const { id } = useParams()
   const dispatch = useAppDispatch()
   const player = useAppSelector((state) => state.player)
   const track = useAppSelector((state) => state.track.viewedTrack)
+  const currentUserPlaylists = useAppSelector(
+    (state) => state.playlist.currentUserPlaylist,
+  )
+  const likedMusic = currentUserPlaylists.find(
+    (playlist) => playlist.title == "Liked Music",
+  )
+  const ifSongIsLiked = likedMusic?.trackIds.includes(id as string)
 
-  // fetching user
+  // fetching track
   const loading = useAppSelector((state) => state.track.loading)
   const [bgColor, setBgColor] = useState("#777777")
-
   const setTrackBackgroundColor = (image: string) => {
     getColor(image).then((color) => {
       const result = color as number[]
@@ -52,6 +69,13 @@ const TrackPage = () => {
     } else {
       dispatch(addToQueue(track as Track))
       dispatch(playNewSong())
+    }
+  }
+  const handleLikedSong = () => {
+    if (ifSongIsLiked) {
+      dispatch(removeTrackFromLikedMusic(track as Track))
+    } else {
+      dispatch(addTrackToLikedMusic(track as Track))
     }
   }
 
@@ -97,8 +121,12 @@ const TrackPage = () => {
                 <BsPlayFill size={42} />
               )}
             </button>
-            <button>
-              <BsHeart size={32} />
+            <button onClick={handleLikedSong}>
+              {ifSongIsLiked ? (
+                <BsHeartFill size={32} />
+              ) : (
+                <BsHeart size={32} />
+              )}
             </button>
             <TrackDropdown track={track} />
           </div>

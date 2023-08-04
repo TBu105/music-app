@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { Track } from "../../app/types"
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { Playlist, Track } from "../../app/types"
 import axios from "axios"
 import { AppThunk } from "../../app/store"
 import { uploadFile } from "../../utils/uploadfile"
@@ -10,9 +10,10 @@ const api = axios.create({
 })
 
 const getSongAPI = axios.create({
-  baseURL: `https://api.musixmatch.com/ws/1.1/track.search?apikey=${
-    import.meta.env.VITE_MUSIXMATCH_API_KEY
-  }`,
+  baseURL: "https://api.musixmatch.com/ws/1.1/track.search",
+  params: {
+    apikey: import.meta.env.VITE_MUSIXMATCH_API_KEY,
+  },
 })
 
 interface TrackState {
@@ -39,15 +40,11 @@ export const fetchTrackById = createAsyncThunk(
     try {
       const response = await api.get(`/track/${id}`)
       const trackData = response.data.track[0]
-
       const trackFromThirdPartyAPI = await searchTracks(
         trackData.title,
         trackData.artist,
       )
-      console.log(trackFromThirdPartyAPI)
       const lyrics = await getLyrics(trackFromThirdPartyAPI)
-      console.log(lyrics)
-
       var transformedTrack: Track = {
         id: trackData._id,
         title: trackData.title,

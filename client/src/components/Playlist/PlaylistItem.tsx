@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react"
-import { Playlist } from "../../app/types"
+import { IncompletePlaylist } from "../../app/types"
 import { useNavigate } from "react-router-dom"
 
 type Props = {
-  playlist: Playlist
+  playlist: IncompletePlaylist
 }
 
 const PlaylistItem = ({ playlist }: Props) => {
@@ -22,7 +21,10 @@ const PlaylistItem = ({ playlist }: Props) => {
       <div className="flex flex-col">
         <span className="font-medium text-base">{playlist.title}</span>
         <span className="font-normal text-sm text-linkwater/50">
-          Playlist &#8226; {playlist.creator}
+          Playlist &#8226;{" "}
+          {playlist.title == "Liked Music"
+            ? `${playlist.trackIds.length} songs`
+            : playlist.creator}
         </span>
       </div>
     </div>

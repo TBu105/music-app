@@ -4,7 +4,7 @@ import { duration } from "../../utils/utils"
 import { BsThreeDots } from "react-icons/bs"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { removeTrackFromPlaylist } from "../../features/playlist/playlistSlice"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 type Props = {
   track: Track
@@ -60,7 +60,9 @@ const TrackInPlaylist = ({ index, track }: Props) => {
           className="object-cover w-10 h-10"
         />
         <div className="overflow-hidden">
-          <h3>{track.title}</h3>
+          <Link to={`/track/${track.id}`} className="hover:underline">
+            {track.title}
+          </Link>
           <p className="text-xs opacity-50">{track.artist}</p>
         </div>
       </div>

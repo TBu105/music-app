@@ -3,6 +3,7 @@ import { BsCaretRightFill, BsThreeDots } from "react-icons/bs"
 import { Playlist, Track } from "../../app/types"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import {
+  addTrackToLikedMusic,
   addTrackToPlaylist,
   createNewPlaylist,
 } from "../../features/playlist/playlistSlice"
@@ -47,6 +48,10 @@ const TrackDropdown = ({ track }: Props) => {
   const handleAddToQueue = () => {
     dispatch(addToQueue(track))
   }
+  const handleLikedSong = () => {
+    dispatch(addTrackToLikedMusic(track))
+    setToggleDropdown(false)
+  }
 
   return (
     <div className="relative h-8 w-8">
@@ -63,10 +68,16 @@ const TrackDropdown = ({ track }: Props) => {
             ref={dialogRef}
           >
             <button
-              className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full justify-between group relative"
+              className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full justify-between group relative border-b border-white/5"
               onClick={handleAddToQueue}
             >
               Add to queue
+            </button>
+            <button
+              className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full justify-between group relative"
+              onClick={handleLikedSong}
+            >
+              Save to Liked Music
             </button>
             <div className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full justify-between group relative">
               Add to playlists <BsCaretRightFill />
@@ -77,17 +88,19 @@ const TrackDropdown = ({ track }: Props) => {
                 >
                   Create playlist
                 </button>
-                {currentUserPlaylists.map((playlist, index) => (
-                  <button
-                    key={index}
-                    className={`flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full justify-between group relative border-white/5 ${
-                      index == 0 && "border-t"
-                    }`}
-                    onClick={() => handleAddTrackToPlaylist(playlist.id)}
-                  >
-                    {playlist.title}
-                  </button>
-                ))}
+                {currentUserPlaylists
+                  .filter((playlist) => playlist.title != "Liked Music")
+                  .map((playlist, index) => (
+                    <button
+                      key={index}
+                      className={`flex items-center gap-2 hover:bg-white/5 p-2 rounded-sm w-full justify-between group relative border-white/5 ${
+                        index == 0 && "border-t"
+                      }`}
+                      onClick={() => handleAddTrackToPlaylist(playlist.id)}
+                    >
+                      {playlist.title}
+                    </button>
+                  ))}
               </div>
             </div>
           </div>
