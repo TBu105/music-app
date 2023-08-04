@@ -19,29 +19,6 @@ const initialState: AuthState = {
   error: null,
 }
 
-// Deprecated
-
-// export const getCurrentUserAsync = (): AppThunk => async (dispatch) => {
-//   try {
-//     api.get("/user/currentUser").then((firstResponse) => {
-//       const id = firstResponse.data.user.userId
-//       api.get(`/user/${id}`).then((secondResponse) => {
-//         const user = secondResponse.data.user
-//         dispatch(
-//           setCurrentUserSuccess({
-//             id: id,
-//             email: user.email,
-//             image: user.image,
-//             role: "",
-//           }),
-//         )
-//       })
-//     })
-//   } catch (error: any) {
-//     dispatch(setCurrentUserFailure(error.response.data.message))
-//   }
-// }
-
 export const getCurrentUser = createAsyncThunk(
   "auth/fetchCurrentUser",
   async () => {
@@ -90,7 +67,9 @@ export const registerAsync =
         }),
       )
     } catch (error: any) {
-      dispatch(setCurrentUserFailure(error))
+      dispatch(
+        setCurrentUserFailure(error.response.data.error || "An error occurred"),
+      )
     }
   }
 

@@ -43,18 +43,16 @@ const RegisterPage = () => {
     setGender(e.target.value)
   }
   const handleSubmitRegister = () => {
-    try {
-      dispatch(
-        registerAsync(
-          email,
-          username,
-          `${year}-${month}-${date}`,
-          password,
-          gender,
-        ),
-      )
-      navigate("/")
-    } catch (error) {}
+    dispatch(
+      registerAsync(
+        email,
+        username,
+        `${year}-${month}-${date}`,
+        password,
+        gender,
+      ),
+    )
+    if (isLoggedIn == "true") navigate("/")
   }
 
   if (isLoggedIn === "true") {

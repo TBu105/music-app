@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react"
-import { Duration } from "../Durations"
+import { Duration } from "./Durations"
 import {
   BsPauseFill,
   BsPlayFill,

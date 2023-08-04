@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const API_KEY = import.meta.env.VITE_MUSIXMATCH_API_KEY
-const BASE_URL = "/proxy"
+const BASE_URL = "/musixmatch"
 
 export const searchTracks = async (q_track: string, q_artist: string) => {
   if (!API_KEY) console.error("Error: can't find API key")

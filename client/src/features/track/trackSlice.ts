@@ -9,13 +9,6 @@ const api = axios.create({
   baseURL: "/api/v1",
 })
 
-const getSongAPI = axios.create({
-  baseURL: "https://api.musixmatch.com/ws/1.1/track.search",
-  params: {
-    apikey: import.meta.env.VITE_MUSIXMATCH_API_KEY,
-  },
-})
-
 interface TrackState {
   viewedTrack: Track | null
   allTrack: Track[]

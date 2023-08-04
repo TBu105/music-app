@@ -101,14 +101,15 @@ export const createNewPlaylist = createAsyncThunk(
     try {
       const response = await api.post("/playlist/create", { title })
       const playlistData = response.data.playlist
+      const creator = await axios.get(`/api/v1/user/${playlistData.userId}`)
+      let creatorName: string = creator.data.user.username
       var transformedPlaylist: IncompletePlaylist = {
         id: playlistData._id,
         title: playlistData.title,
-        creator: playlistData.userId,
+        creator: creatorName,
         thumbnail: playlistData.image,
         trackIds: [],
       }
-      console.log(transformedPlaylist)
       return transformedPlaylist
     } catch (e: any) {
       throw Error(`Error: ${e.response.data.error}`)
@@ -210,9 +211,14 @@ const playlistSlice = createSlice({
     removeTrackFromPlaylistSuccess: (state, action) => {
       state.error = null
       const track = action.payload.track
+      const viewedPlaylist = state.viewedPlaylist
+      const playlist = state.currentUserPlaylist.find(
+        (playlist) => playlist.id === action.payload.playlistId,
+      )
+      playlist?.trackIds.splice
       toast(`Removed ${track.artist} - ${track.title} from this playlist!`)
-      if (state.viewedPlaylist?.title != action.payload.playlistId) return
-      state.viewedPlaylist?.trackList.splice(action.payload.index, 1)
+      if (viewedPlaylist?.id != action.payload.playlistId) return
+      viewedPlaylist?.trackList.splice(action.payload.index, 1)
     },
     removeTrackFromPlaylistFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload
@@ -266,9 +272,7 @@ const playlistSlice = createSlice({
       const index = playlist?.trackIds.indexOf(track.id)
       playlist?.trackIds.splice(index as number, 1)
       if (state.viewedPlaylist?.title != "Liked Music") return
-      state.viewedPlaylist.trackList = state.viewedPlaylist.trackList.filter(
-        (trackInPlaylist) => trackInPlaylist.id != track.id,
-      )
+      state.viewedPlaylist.trackList.splice(index as number, 1)
     },
   },
   extraReducers(builder) {

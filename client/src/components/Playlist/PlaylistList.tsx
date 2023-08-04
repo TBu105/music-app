@@ -18,7 +18,26 @@ const PlaylistList = () => {
     dispatch(getCurrentUserPlaylist(currentUserId))
   }, [currentUserId])
 
+  const ifLikedMusicIsEmpty =
+    currentUserPlaylists.find((playlist) => playlist.title == "Liked Music")
+      ?.trackIds.length == 0
+
+  const onlyPlaylistIsLikedMusic =
+    currentUserPlaylists.filter((playlist) => playlist.title != "Liked Music")
+      .length == 0
+
+  if (!currentUserId || (ifLikedMusicIsEmpty && onlyPlaylistIsLikedMusic))
+    return (
+      <div className="w-full bg-jarcata h-fit rounded px-4 py-3 flex flex-col gap-4">
+        <h3 className="text-base">Create your first playlist</h3>
+        <button className="bg-white text-jarcata text-sm w-fit font-semibold px-2 py-1 rounded-full">
+          Create playlist
+        </button>
+      </div>
+    )
+
   if (loading) return <PlaylistItemSkeleton itemCount={7} />
+
   return (
     <div className="flex flex-col mb-28 gap-2">
       {currentUserPlaylists.map((playlist, index) => (

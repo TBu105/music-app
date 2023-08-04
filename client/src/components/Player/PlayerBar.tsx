@@ -30,6 +30,7 @@ const PlayerBar = () => {
     playerQueue,
     currentSong,
   } = useAppSelector((state) => state.player)
+  const currentUser = useAppSelector((state) => state.auth.currentUser)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -81,6 +82,20 @@ const PlayerBar = () => {
     dispatch(nextTrack())
     dispatch(setPlay())
   }
+
+  if (!currentUser)
+    return (
+      <div className="bg-jarcata-500 h-fit absolute bottom-2 inset-x-2 text-linkwater p-4 flex flex-col gap-2 rounded-lg">
+        <h2 className="text-2xl font-bold">It's just a preview</h2>
+        <p>
+          <a className="font-bold hover:underline" href="/signup">
+            Sign up
+          </a>{" "}
+          to Unicord now to join in, and explore the wide-range of musics our
+          community creates & share.
+        </p>
+      </div>
+    )
 
   return (
     <div className="absolute bottom-0 bg-black text-linkwater w-full h-28 flex items-center justify-between">

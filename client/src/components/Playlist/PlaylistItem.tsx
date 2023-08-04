@@ -8,6 +8,8 @@ type Props = {
 const PlaylistItem = ({ playlist }: Props) => {
   const navigate = useNavigate()
 
+  if (playlist.title == "Liked Music" && playlist.trackIds.length == 0) return
+
   return (
     <div
       className="flex h-16 p-1 gap-2 cursor-pointer"
