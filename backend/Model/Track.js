@@ -38,7 +38,6 @@ const TrackSchema = new mongoose.Schema(
     },
     duration: {
       type: Number,
-      require: [true, "Your song must have duration"],
     },
     isPublic: {
       type: Boolean,
