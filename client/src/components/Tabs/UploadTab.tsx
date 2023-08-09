@@ -21,10 +21,6 @@ const UploadTab = () => {
     accept: { "audio/*": [".mp3", ".flac", ".wav"] },
   })
 
-  useEffect(() => {
-    console.log(files)
-  }, [files])
-
   const handleOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newOption = e.target.value
     setUploadOption(newOption)

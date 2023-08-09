@@ -26,38 +26,38 @@ const MainLayout = () => {
   }
 
   return (
-    <div className="w-full h-screen flex flex-row-reverse bg-neutral-950">
-      <main
-        className="flex-grow text-linkwater overflow-auto"
+    <div className="h-screen flex flex-col">
+      <div
+        className="w-full flex flex-row-reverse bg-neutral-950 flex-grow overflow-auto"
         onScroll={handleBlur}
       >
-        <div className="sticky top-0 z-10">
-          <div
-            className={`absolute h-[88px] inset-x-0 transition-all duration-500 ${
-              isBlurred && "bg-neutral-950/90 backdrop-blur"
-            }`}
-          ></div>
-          <div className="absolute py-7 inset-x-0 px-10 flex justify-between">
-            <HistoryNavigation />
-            {isLoggedIn === "loading" && ""}
-            {isLoggedIn === "false" && (
-              <Primary onClick={() => navigate("/account/login")}>
-                <span className="px-4">Đăng nhập</span>
-              </Primary>
-            )}
-            {isLoggedIn === "true" && (
-              <div className="flex gap-2">
-                <Upload />
-                <ProfileDropdown logOut={handleLogOut} />
-              </div>
-            )}
+        <div className="flex-grow text-linkwater h-[5000px] scroll-smooth bg-gradient-to-t from-neutral-950 from-95% to-martinique to-100%">
+          <div className="sticky top-0 z-10">
+            <div
+              className={`absolute h-[88px] inset-x-0 transition-all duration-500 ${
+                isBlurred && "bg-neutral-950/90 backdrop-blur"
+              }`}
+            ></div>
+            <div className="absolute py-7 inset-x-0 px-10 flex justify-between">
+              <HistoryNavigation />
+              {isLoggedIn === "loading" && ""}
+              {isLoggedIn === "false" && (
+                <Primary onClick={() => navigate("/account/login")}>
+                  <span className="px-4">Đăng nhập</span>
+                </Primary>
+              )}
+              {isLoggedIn === "true" && (
+                <div className="flex gap-2">
+                  <Upload />
+                  <ProfileDropdown logOut={handleLogOut} />
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="h-[5000px] scroll-smooth bg-gradient-to-t from-neutral-950 from-95% to-martinique to-100%">
           <Outlet />
         </div>
-      </main>
-      <Sidebar />
+        <Sidebar />
+      </div>
       <PlayerBar />
       <ToastContainer
         position="bottom-right"
