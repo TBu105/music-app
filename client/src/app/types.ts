@@ -9,9 +9,32 @@ export interface User {
   follower: number
   image: string
 }
-export interface CurrentUser {
-  email: string
+
+export type CurrentUser = Pick<User, "id" | "email" | "image" | "role">
+
+export interface Track {
   id: string
-  image: string
-  role: string
+  title: string
+  artist: string
+  thumbnail: string
+  uploader: string
+  audio: string
+  lyrics: string
+  publicDate: Date
+  duration: number
+  privacy: boolean
+  banned: boolean
+}
+
+export interface Playlist {
+  id: string
+  title: string
+  creator: string
+  thumbnail: string
+}
+export interface IncompletePlaylist extends Playlist {
+  trackIds: string[]
+}
+export interface FullPlaylist extends Playlist {
+  trackList: Track[]
 }

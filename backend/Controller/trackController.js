@@ -1,5 +1,4 @@
 const Track = require("../Model/Track");
-const History = require("../Model/History");
 const { checkPermissonToChangeInfo } = require("../Utils/checkPermission");
 
 const createTrack = async (req, res) => {
@@ -20,16 +19,21 @@ const getTrackById = async (req, res) => {
   const track = await Track.find({ _id: req.params.id });
 
   //When track is get to be listening, automatically adding this track to history database
-  const historyBody = { userId: req.user.userId, trackId: req.params.id };
+  // const historyBody = { userId: req.user.userId, trackId: req.params.id };
 
-  const history = await History.create(historyBody);
-  console.log("hehe", history);
+  // const history = await History.create(historyBody);
 
   res.status(200).json({ message: "Find Track Successfully", track });
 };
 const updateTrackById = async (req, res) => {
+  const track = await Track.findById({ _id: req.params.id });
+
+  checkPermissonToChangeInfo(req.user, track.userId.toString());
+
   if (req.body.hasOwnProperty("userId")) {
-    throw Error("Do not have permisson to change user's song");
+    return res
+      .status(500)
+      .json({ error: "Do not have permisson to change user's song" });
   }
   const updateTrack = await Track.findByIdAndUpdate(
     { _id: req.params.id },

@@ -1,8 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { User } from "../../app/types"
 import axios from "axios"
-import { createDispatchHook } from "react-redux"
 import { AppThunk } from "../../app/store"
+import { uploadFile } from "../../utils/uploadfile"
+import { toast } from "react-toastify"
 
 interface UserState {
   userData: User | null
@@ -48,17 +49,9 @@ export const fetchUserById = createAsyncThunk(
 
 export const uploadAvatar = createAsyncThunk(
   "user/updateAvatar",
-  async (file: File) => {
+  async (image: File) => {
     try {
-      const formData = new FormData()
-      formData.append("image", file)
-
-      const response = await api.post("/fileupload/image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      return response.data.imageURL
+      return await uploadFile(image)
     } catch (error: any) {
       throw Error(`Error: ${error.response.data.message}`)
     }
@@ -97,6 +90,7 @@ const userSlice = createSlice({
     updateUserSuccess: (state, action) => {
       state.error = null
       state.userData = action.payload
+      toast("User profile updated!")
     },
     updateUserFailure: (state, action) => {
       state.error = action.payload

@@ -1,4 +1,5 @@
 const User = require("../Model/User");
+const Playlist = require("../Model/Playlist");
 
 const { attachTokenToCookies } = require("../Utils/jwt");
 
@@ -13,7 +14,7 @@ const getUserById = async (req, res) => {
 
   const user = await User.findOne({ _id: id }).select("-password -role");
   if (!user) {
-    throw Error("There is no user");
+    return res.status(500).json({ error: "There is no user" });
   }
 
   res.status(200).json({ message: "Take user success", user });
@@ -21,6 +22,27 @@ const getUserById = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   const allUsers = await User.find({});
+  res.status(200).json({ message: "List all user", users: allUsers });
+};
+
+const addLikedMusicToAll = async (req, res) => {
+  const allUsers = await User.find({
+    _id: { $ne: "64be0195fa390b751500afb3" },
+  });
+
+  for (const user of allUsers) {
+    const playlistObj = {
+      userId: user._id,
+      title: "Liked Music",
+    };
+    const likedMusicPlaylist = await Playlist.create(playlistObj);
+
+    //set user liked music equal playlist id
+    user.likedMusic = likedMusicPlaylist._id;
+
+    user.save();
+  }
+
   res.status(200).json({ message: "List all user", users: allUsers });
 };
 
@@ -62,7 +84,7 @@ const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
   if (!oldPassword || !newPassword) {
-    throw Error("Please fill all the field");
+    return res.status(500).json({ error: "Please fill all the field" });
   }
 
   const user = await User.findOne({ _id: req.user.userId });
@@ -90,4 +112,5 @@ module.exports = {
   updateUserPassword,
   deleteUserById,
   showCurrentUser,
+  addLikedMusicToAll,
 };

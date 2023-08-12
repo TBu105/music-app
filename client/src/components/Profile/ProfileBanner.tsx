@@ -7,7 +7,7 @@ import {
   uploadAvatar,
   updateUserById,
 } from "../../features/user/userSlice"
-import { getColor, rgbToHex } from "../../utils/colorthief"
+import { getColor } from "../../utils/colorthief"
 import { setAvatar } from "../../features/auth/authSlice"
 
 const ProfileBanner = () => {
@@ -33,12 +33,17 @@ const ProfileBanner = () => {
 
   const setProfileBackgroundColor = (image: string) => {
     getColor(image).then((color) => {
-      const result = rgbToHex(color as number[])
-      setBgColor(result)
+      const result = color as number[]
+      setBgColor(`${result[0]},${result[1]},${result[2]}`)
     })
   }
 
   useEffect(() => {
+    const isSameUser = user?.id == id
+    if (isSameUser) {
+      setProfileBackgroundColor(user?.image as string)
+      return
+    }
     dispatch(fetchUserById(id as string))
       .unwrap()
       .then((user) => {
@@ -111,9 +116,10 @@ const ProfileBanner = () => {
         {!loading && (
           <div
             style={{
-              background: `linear-gradient(to bottom, ${bgColor}, transparent`,
+              backgroundColor: `rgba(${bgColor},0.4)`,
+              boxShadow: `0 120px 120px 20px rgba(${bgColor},0.2)`,
             }}
-            className="h-88 shadow-2xl shadow-neutral-500/8 relative px-9"
+            className="h-88 relative px-9"
           >
             <div className="absolute flex bottom-9 items-center gap-4">
               <div
@@ -204,7 +210,7 @@ const ProfileBanner = () => {
                     onChange={(e) => {
                       setNewUsername(e.target.value)
                     }}
-                    className="bg-neutral-800 p-2 focus:border-neutral-500 focus:outline-none focus:border rounded-md w-full"
+                    className="bg-neutral-800 p-2 focus:border-neutral-500 focus:outline-none focus:border rounded w-full"
                   />
                   <button
                     className="bg-jarcata rounded-full text-lg font-bold text-linkwater p-2 w-1/3"

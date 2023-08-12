@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { BsBoxArrowUpRight, BsChevronDown, BsPerson } from "react-icons/bs"
 import { Link } from "react-router-dom"
 import Primary from "../Buttons/Primary"
@@ -11,7 +11,7 @@ type Props = {
 const ProfileDropdown = ({ logOut }: Props) => {
   const user = useAppSelector((state) => state.auth.currentUser)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const profileRef: RefObject<HTMLDivElement> = useRef(null)
+  const profileRef: React.RefObject<HTMLDivElement> = useRef(null)
 
   const [avatar, setAvatar] = useState<string | null>(null)
 
@@ -36,7 +36,7 @@ const ProfileDropdown = ({ logOut }: Props) => {
   }, [])
 
   return (
-    <div ref={profileRef} className="h-8">
+    <div ref={profileRef} className="h-8 relative">
       <Primary onClick={() => setShowProfileMenu(!showProfileMenu)}>
         <div className="flex items-center p-1 gap-1 h-full">
           {!avatar ? (
@@ -54,7 +54,7 @@ const ProfileDropdown = ({ logOut }: Props) => {
         </div>
       </Primary>
       {showProfileMenu ? (
-        <div className="bg-neutral-800 absolute top-10 right-0 w-36 rounded-md p-1 flex flex-col text-xs font-semibold">
+        <div className="bg-neutral-800 absolute top-10 right-0 w-44 rounded-md p-1 flex flex-col text-sm">
           <Link
             to={"/account/overview"}
             target="_blank"
@@ -68,6 +68,9 @@ const ProfileDropdown = ({ logOut }: Props) => {
             className="hover:bg-neutral-600 p-2.5 rounded-sm"
           >
             <span>Profile</span>
+          </Link>
+          <Link to={"/"} className="hover:bg-neutral-600 p-2.5 rounded-sm">
+            <span>Notifications</span>
           </Link>
           <Link
             to={"/"}

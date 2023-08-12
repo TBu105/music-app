@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import BrandLogo from "../assets/brand-light.svg"
 import { registerAsync } from "../features/auth/authSlice"
@@ -43,18 +43,16 @@ const RegisterPage = () => {
     setGender(e.target.value)
   }
   const handleSubmitRegister = () => {
-    try {
-      dispatch(
-        registerAsync(
-          email,
-          username,
-          `${year}-${month}-${date}`,
-          password,
-          gender,
-        ),
-      )
-      navigate("/")
-    } catch (error) {}
+    dispatch(
+      registerAsync(
+        email,
+        username,
+        `${year}-${month}-${date}`,
+        password,
+        gender,
+      ),
+    )
+    if (isLoggedIn == "true") navigate("/")
   }
 
   if (isLoggedIn === "true") {

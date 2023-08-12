@@ -1,8 +1,8 @@
 import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "./app/hooks"
 import { getCurrentUser } from "./features/auth/authSlice"
-import { AudioPlayer } from "./components/Player/AudioPlayer"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import "react-toastify/dist/ReactToastify.css"
 
 //layout imports
 import MainLayout from "./layout/MainLayout"
@@ -17,13 +17,10 @@ import ProfilePage from "./pages/ProfilePage"
 import AccountOverview from "./pages/AccountOverview"
 import EditProfile from "./pages/EditProfile"
 import ChangePassword from "./pages/ChangePassword"
+import TrackPage from "./pages/TrackPage"
+import PlaylistPage from "./pages/PlaylistPage"
+import QueuePage from "./pages/QueuePage"
 
-const audio = {
-  url: "https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3",
-  title: "A sample audio title",
-  author: "The Elephants Dream",
-  thumbnail: "https://images.unsplash.com/photo-1511379938547-c1f69419868d",
-}
 const App = () => {
   const dispatch = useAppDispatch()
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
@@ -40,6 +37,9 @@ const App = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Homepage />} />
           <Route path="/user/:id" element={<ProfilePage />} />
+          <Route path="/track/:id" element={<TrackPage />} />
+          <Route path="/playlist/:id" element={<PlaylistPage />} />
+          <Route path="/queue" element={<QueuePage />} />
         </Route>
         <Route path="/account" element={<UserLayout />}>
           <Route path="login" element={<Login />} />

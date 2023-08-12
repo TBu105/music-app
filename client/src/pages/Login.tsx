@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import { loginAsync } from "../features/auth/authSlice"
-import { Navigate, useNavigate } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 
 const Login = () => {
@@ -18,6 +18,10 @@ const Login = () => {
     userRef.current?.focus()
   }, [])
 
+  useEffect(() => {
+    if (loginError) setErrMessage(loginError)
+  }, [loginError])
+
   const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser(e.target.value)
   }
@@ -26,19 +30,13 @@ const Login = () => {
     setPassword(e.target.value)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (user === "") setErrMessage("Enter email!")
-    else if (password === "") setErrMessage("Enter password!")
-    else {
-      try {
-        await dispatch(loginAsync(user, password))
-        setUser("")
-        setPassword("")
-        navigate("/")
-      } catch (error: any) {
-        setErrMessage(`${error.message}: ${loginError}`)
-      }
+    dispatch(loginAsync(user, password))
+    if (isLoggedIn == "true") {
+      navigate("/")
+      setUser("")
+      setPassword("")
     }
   }
 
@@ -49,7 +47,7 @@ const Login = () => {
   return (
     <div className="mx-auto w-1/3 bg-dark h-screen mt-10 rounded-xl text-linkwater pt-12 box-border">
       <h1 className="text-center font-bold text-4xl">Login to Unicord</h1>
-      <form className="mx-auto p-5 w-1/2" onSubmit={handleSubmit}>
+      <form className="mx-auto px-5 pt-5 w-1/2" onSubmit={handleSubmit}>
         <label>Email or username</label>
         <input
           type="text"
@@ -73,9 +71,21 @@ const Login = () => {
         <input
           type="submit"
           value="Log In"
-          className="w-full bg-jarcata my-5 py-3 rounded-full"
+          className="w-full bg-jarcata mt-5 py-3 rounded-full"
         />
       </form>
+      <div className="w-fit font-semibold text-center my-5 flex flex-col gap-5 mx-auto">
+        <Link to={""} className="underline">
+          Forgot your password?
+        </Link>
+        <div className="h-0.5 bg-neutral-800"></div>
+        <span>
+          Don't have an account?{" "}
+          <Link to={"/signup"} className="hover:underline">
+            Sign up for Unicord
+          </Link>
+        </span>
+      </div>
     </div>
   )
 }
