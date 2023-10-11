@@ -8,10 +8,7 @@ import {
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AppThunk } from "../../app/store"
 import { toast } from "react-toastify"
-
-const api = axios.create({
-  baseURL: "/api/v1",
-})
+import { api } from "../../utils/api"
 
 interface PlaylistState {
   viewedPlaylist: FullPlaylist | null

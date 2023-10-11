@@ -1,11 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { AppThunk } from "../../app/store"
 import { CurrentUser } from "../../app/types"
-import axios from "axios"
-
-const api = axios.create({
-  baseURL: "/api/v1",
-})
+import { api } from "../../utils/api"
 
 interface AuthState {
   currentUser: CurrentUser | null
@@ -144,9 +140,9 @@ const authSlice = createSlice({
     updateUserPasswordFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload
     },
-    setAvatar: (state, action: PayloadAction<string>) => {
+    updateCurrentUser: (state, action: PayloadAction<Partial<CurrentUser>>) => {
       if (state.currentUser) {
-        state.currentUser.image = action.payload
+        state.currentUser = { ...state.currentUser, ...action.payload }
       }
     },
   },
@@ -174,7 +170,7 @@ export const {
   logoutSuccess,
   updateUserPasswordSuccess,
   updateUserPasswordFailure,
-  setAvatar,
+  updateCurrentUser,
 } = authSlice.actions
 
 export default authSlice.reducer

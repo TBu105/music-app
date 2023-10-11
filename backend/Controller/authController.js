@@ -4,7 +4,7 @@ const Playlist = require("../Model/Playlist");
 const { attachTokenToCookies } = require("../Utils/jwt");
 
 const register = async (req, res) => {
-  const { email, username, birthday, password, gender, image } = req.body;
+  const { email, username, birthday, password, gender } = req.body;
 
   if (!email || !username || !birthday || !gender || !password) {
     return res
@@ -19,7 +19,6 @@ const register = async (req, res) => {
   }
 
   const isFirstAccount = (await User.countDocuments({})) === 0;
-  const role = isFirstAccount ? "admin" : "user";
 
   const user = await User.create({
     email,
@@ -27,14 +26,14 @@ const register = async (req, res) => {
     birthday,
     gender,
     password,
+    role: isFirstAccount ? "admin" : "user",
   });
 
   // create Liked Music playlist when user is created
-  const playlistObj = {
+  const defaultLikedMusicPlaylist = await Playlist.create({
     userId: user._id,
     title: "Liked Music",
-  };
-  const likedMusicPlaylist = await Playlist.create(playlistObj);
+  });
 
   //set user liked music equal playlist id
   user.likedMusic = likedMusicPlaylist._id;

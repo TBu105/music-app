@@ -1,13 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { Playlist, Track } from "../../app/types"
-import axios from "axios"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { Track } from "../../app/types"
 import { AppThunk } from "../../app/store"
 import { uploadFile } from "../../utils/uploadfile"
 import { getLyrics, searchTracks } from "../../utils/musixmatchAPI"
-
-const api = axios.create({
-  baseURL: "/api/v1",
-})
+import { api } from "../../utils/api"
 
 interface TrackState {
   viewedTrack: Track | null

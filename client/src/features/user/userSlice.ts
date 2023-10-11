@@ -1,9 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { User } from "../../app/types"
-import axios from "axios"
-import { AppThunk } from "../../app/store"
-import { uploadFile } from "../../utils/uploadfile"
 import { toast } from "react-toastify"
+import { api } from "../../utils/api"
 
 interface UserState {
   userData: User | null
@@ -18,10 +16,6 @@ const initialState: UserState = {
   loading: false,
   error: null,
 }
-
-const api = axios.create({
-  baseURL: "/api/v1",
-})
 
 export const fetchUserById = createAsyncThunk(
   "user/fetchUser",
@@ -47,25 +41,14 @@ export const fetchUserById = createAsyncThunk(
   },
 )
 
-export const uploadAvatar = createAsyncThunk(
-  "user/updateAvatar",
-  async (image: File) => {
+export const updateUserById = createAsyncThunk(
+  "user/updateUser",
+  async (userData: Partial<User>) => {
     try {
-      return await uploadFile(image)
-    } catch (error: any) {
-      throw Error(`Error: ${error.response.data.message}`)
-    }
-  },
-)
-
-export const updateUserById =
-  (id: string, userData: Partial<User>): AppThunk =>
-  async (dispatch) => {
-    try {
-      const response = await api.patch(`/user/${id}`, userData)
+      const response = await api.patch(`/user/${userData.id}`, userData)
       const user = response.data.user
       const transformedData: User = {
-        id: id,
+        id: user._id,
         email: user.email,
         username: user.username,
         birthday: user.birthday,
@@ -75,13 +58,12 @@ export const updateUserById =
         password: "",
         role: "",
       }
-      dispatch(updateUserSuccess(transformedData))
+      return transformedData
     } catch (error: any) {
-      dispatch(
-        updateUserFailure(new Error(`Error: ${error.response.data.message}`)),
-      )
+      throw Error(`Error: ${error.response.data.message}`)
     }
-  }
+  },
+)
 
 const userSlice = createSlice({
   name: "user",
@@ -109,17 +91,15 @@ const userSlice = createSlice({
       state.loading = false
       state.error = action.payload as string
     })
-    builder.addCase(uploadAvatar.pending, (state) => {
+    builder.addCase(updateUserById.pending, (state) => {
       state.loading = true
       state.error = null
     })
-    builder.addCase(uploadAvatar.fulfilled, (state, action) => {
+    builder.addCase(updateUserById.fulfilled, (state, action) => {
       state.loading = false
-      if (state.userData) {
-        state.userData.image = action.payload
-      }
+      state.userData = action.payload
     })
-    builder.addCase(uploadAvatar.rejected, (state, action) => {
+    builder.addCase(updateUserById.rejected, (state, action) => {
       state.loading = false
       state.error = action.payload as string
     })
