@@ -1,7 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { FullPlaylist, Track } from "../../app/types"
 import { OnProgressProps } from "react-player/base"
-import { AppThunk } from "../../app/store"
 import { toast } from "react-toastify"
 
 interface PlayerState {

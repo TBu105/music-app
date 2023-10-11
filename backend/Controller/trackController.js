@@ -54,8 +54,7 @@ const deleteTrackById = async (req, res) => {
 const getAllTracksOfAUser = async (req, res) => {
   const { id: userId } = req.params;
   console.log(req.user);
-  checkPermissonToChangeInfo(req.user, userId);
-  const allTracks = await Track.find({ userId: userId });
+  const allTracks = await Track.find({ userId: userId, isPublic: true });
   res.status(200).json({
     message: "Find All Successfully",
     length: allTracks.length,

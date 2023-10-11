@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { useAppSelector, useAppDispatch } from "../app/hooks"
 import { useEffect, useState } from "react"
-import { getColor, rgbToHex } from "../utils/colorthief"
+import { getColor } from "../utils/colorthief"
 import { fetchTrackById } from "../features/track/trackSlice"
 import {
   addToQueue,
@@ -9,30 +9,21 @@ import {
   setPause,
 } from "../features/player/playerSlice"
 import { Track } from "../app/types"
-import {
-  BsHeart,
-  BsHeartFill,
-  BsPauseFill,
-  BsPlayFill,
-  BsThreeDots,
-} from "react-icons/bs"
+import { BsHeart, BsHeartFill, BsPauseFill, BsPlayFill } from "react-icons/bs"
 import { duration } from "../utils/utils"
 import TrackDropdown from "../components/Track/TrackDropdown"
 import {
   addTrackToLikedMusic,
   removeTrackFromLikedMusic,
 } from "../features/playlist/playlistSlice"
-import axios from "axios"
 
 const TrackPage = () => {
   const { id } = useParams()
   const dispatch = useAppDispatch()
   const player = useAppSelector((state) => state.player)
   const track = useAppSelector((state) => state.track.viewedTrack)
-  const currentUserPlaylists = useAppSelector(
-    (state) => state.playlist.currentUserPlaylist,
-  )
-  const likedMusic = currentUserPlaylists.find(
+  const { currentUserPlaylist } = useAppSelector((state) => state.playlist)
+  const likedMusic = currentUserPlaylist.find(
     (playlist) => playlist.title == "Liked Music",
   )
   const ifSongIsLiked = likedMusic?.trackIds.includes(id as string)

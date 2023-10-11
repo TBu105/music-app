@@ -1,8 +1,4 @@
-import axios from "axios"
-
-const api = axios.create({
-  baseURL: "/api/v1",
-})
+import { api } from "./api"
 
 export const uploadFile = async (file: File) => {
   try {
@@ -13,7 +9,7 @@ export const uploadFile = async (file: File) => {
         "Content-Type": "multipart/form-data",
       },
     })
-    return response.data.fileURL
+    return response.data
   } catch (error: any) {
     throw Error(`Error: ${error.response.data.message}`)
   }

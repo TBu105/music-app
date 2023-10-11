@@ -11,18 +11,18 @@ const Sidebar = () => {
       <Link to="/">
         <img src={BrandLogo} alt="brand" />
       </Link>
-      <div className="flex flex-col gap-6 text-2xl my-6 px-2 font-bold">
+      <div className="flex flex-col gap-6 text-lg my-6 px-2 font-bold">
         <div className="flex items-center gap-4">
-          <BsFillHouseDoorFill size={32} />
+          <BsFillHouseDoorFill size={24} />
           <Link to="/">Home</Link>
         </div>
         <div className="flex items-center gap-4">
-          <BsSearch size={32} />
+          <BsSearch size={24} />
           <Link to="/">Search</Link>
         </div>
         <div className="w-full h-0.5 bg-white/10 rounded-lg"></div>
         <div className="w-full flex items-center justify-auto gap-4 relative">
-          <BsFiles size={32} />
+          <BsFiles size={24} />
           Your Library
           <PlaylistDropdown />
         </div>
