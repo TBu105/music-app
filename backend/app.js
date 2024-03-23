@@ -6,12 +6,16 @@ const app = express();
 
 const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
+var cors = require("cors");
 
 //install package to replace try catch
 require("express-async-errors");
 
 //database connect
 const connectDB = require("./Database/db");
+
+// cross origin
+app.use(cors());
 
 // route
 const userRouter = require("./Route/userRoute");

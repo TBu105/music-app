@@ -36,7 +36,7 @@ const register = async (req, res) => {
   });
 
   //set user liked music equal playlist id
-  user.likedMusic = likedMusicPlaylist._id;
+  user.likedMusic = defaultLikedMusicPlaylist._id;
 
   user.save();
 
@@ -72,7 +72,7 @@ const login = async (req, res) => {
   //create jwt token and attach it to cookie
   attachTokenToCookies({ res, payload: tokenUser });
 
-  res.status(200).json({ message: "Success login", user: tokenUser });
+  res.status(200).json({message: "Success login", user: tokenUser });
 };
 
 const logout = async (req, res) => {
